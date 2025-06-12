@@ -1,0 +1,62 @@
+server:
+  port: 9090
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hhrwebsiteproject@gmail.com
+    password: dgwh mobs amim wvwq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    user:
+      name: user
+      password: admin
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+    url: jdbc:postgresql://localhost:5432/hrwebsitedb
+    # username: ${JAVA17_POSTGRE_USERNAME}
+    # password: ${JAVA17_POSTGRE_PASSWORD}
+    # url: ${JAVA17_POSTGRE_URL}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+#  Swagger...
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  show-actuator: false
+
+hrwebsite:
+  jwt:
+    secret-key: w.+.Wi+NqVDqVpFwMUchmZaJ8]q@X#Vf#2gAL(~}l[.fOg8vdE
+    issuer: Java17X
+  superadmin:
+    email: admin@hr.com
+    password: Admin1234
+
+#logging:
+#  level:
+#    root: trace
+#    com.barisd.java17x.controller.UserController: trace
+#  file:
+#    name: java17Xdebug.log
+#  logback:
+#    rollingpolicy:
+#      max-file-size: 1MB
