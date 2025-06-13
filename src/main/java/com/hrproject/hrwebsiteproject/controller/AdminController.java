@@ -61,5 +61,16 @@ public class AdminController {
                 .data(dto)
                 .build());
     }
+    //13.06
+    @PutMapping(EndPoints.REJECT_COMPANY)
+    public ResponseEntity<BaseResponse<Boolean>> rejectUserAndCompany(@RequestParam Long companyId) {
+        adminService.rejectCompanyById(companyId);
+        return ResponseEntity.ok(BaseResponse.<Boolean>builder()
+                .code(200)
+                .success(true)
+                .message("Kullanıcı ve şirket reddedildi.")
+                .data(true)
+                .build());
+    }
 
 }

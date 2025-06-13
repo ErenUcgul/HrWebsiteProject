@@ -35,7 +35,8 @@ public class HrWebsiteProjectSecurityConfig {
                                 "/v1/dev/admin/update-content",
                                 "v1/dev/auth/refresh-access-token",
                                 "v1/dev/admin/dashboard",
-                                "v1/dev/company/dashboard","v1/dev/employee/dashboard").permitAll()
+                                "v1/dev/company/dashboard","v1/dev/employee/dashboard",
+                                "v1/dev/admin/reject-company").permitAll()
 
                         .requestMatchers("/admin/**", "/v1/dev/post/show-all-post", "v1/dev/auth/verify-email",
                                 "v1/dev/admin/approve-user-and-company", "v1/dev/auth/login", "v1/dev/auth/forgot-password",

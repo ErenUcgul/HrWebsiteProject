@@ -40,7 +40,11 @@ public enum ErrorType {
     CANNOT_DEACTIVATE_SUPER_ADMIN(4022,"Süper Admin (İlk Admin) deaktif edilemez" , HttpStatus.BAD_REQUEST ),
     CONTENT_NOT_FOUND(4023,"İçerik bulunamadı" ,HttpStatus.BAD_REQUEST ),
     INVALID_REFRESH_TOKEN(4024,"Refresh token geçersiz" ,HttpStatus.BAD_REQUEST ),
-    EXPIRED_REFRESH_TOKEN(4025,"Refresh tokenın süresi doldu " ,HttpStatus.BAD_REQUEST ),;
+    EXPIRED_REFRESH_TOKEN(4025,"Refresh tokenın süresi doldu " ,HttpStatus.BAD_REQUEST ),
+    COMPANY_ALREADY_REJECTED(4026,"Şirket zaten reddedilmiş" ,HttpStatus.BAD_REQUEST ),
+    COMPANY_ALREADY_APPROVED(4027,"Şirket zaten onaylanmış" ,HttpStatus.BAD_REQUEST ),
+    USER_STATE_IS_PENDING(4028,"Kullanıcı PENDING durumunda." ,HttpStatus.BAD_REQUEST ),
+    COMPANY_STATE_IS_PENDING(4029,"Şirket PENDING durumunda." ,HttpStatus.BAD_REQUEST ),;
 
 
     int code;

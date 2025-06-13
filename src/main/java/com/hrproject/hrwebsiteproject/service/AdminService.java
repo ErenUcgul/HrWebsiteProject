@@ -23,18 +23,25 @@ public class AdminService {
         User user = userService.findById(userId)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
 
-        // Kullanıcının durumu kontrol edilir,sadece ACTIVE ise onaylanabilir.
+        // Kullanıcının durumu kontrol edilir,ACTIVE ise onaylanamaz.
         if (user.getState() == EUserState.ACTIVE) {
             throw new HrWebsiteProjectException(ErrorType.USER_ALREADY_ACTIVE);
+        }
+        // Kullanıcının durumu kontrol edilir,REJECTED ve INREVIEW ise onaylanabilir.
+        if (user.getState() == EUserState.PENDING) {
+            throw new HrWebsiteProjectException(ErrorType.USER_STATE_IS_PENDING);
         }
 
         // Kullanıcının şirketi bulunur
         Company company = companyService.findByUserId(user.getId())
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND));
 
-        // Şirketin durumu kontrol edilir
+        // Şirketin durumu kontrol edilir,REJECTED ve INREVIEW ise onaylanabilir
         if (company.getState() == ECompanyState.ACTIVE) {
             throw new HrWebsiteProjectException(ErrorType.COMPANY_ALREADY_ACTIVE);
+        }
+        if (company.getState() == ECompanyState.PENDING) {
+            throw new HrWebsiteProjectException(ErrorType.COMPANY_STATE_IS_PENDING);
         }
 
         // Hem kullanıcı hem şirket aktif yapılır
@@ -55,7 +62,48 @@ public class AdminService {
                 user.getLastName()
         );
         //TODO:Membership bilgisi de verilebilir.
-        mailSenderService.sendWelcomeMail(new WelcomeMailRequestDto(
+        mailSenderService.sendInformationMail(new WelcomeMailRequestDto(
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                subject,
+                message
+        ));
+    }
+
+    public void rejectCompanyById(Long companyId) {
+        // Şirket bulunur
+        Company company = companyService.findByCompanyId(companyId)
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND));
+
+        // Zaten reddedilmiş mi?
+        if (company.getState() == ECompanyState.REJECTED) {
+            throw new HrWebsiteProjectException(ErrorType.COMPANY_ALREADY_REJECTED);
+        }
+        // Aktif edilen şirket reddedilemez
+        if (company.getState() == ECompanyState.ACTIVE) {
+            throw new HrWebsiteProjectException(ErrorType.COMPANY_ALREADY_APPROVED);
+        }
+
+        // Şirket RED durumuna alınır
+        company.setState(ECompanyState.REJECTED);
+        companyService.save(company);
+
+        // Kullanıcıya bilgi maili gönder
+        User user = userService.findById(company.getUserId())
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
+
+        String subject = "HrWebsiteProject Şirket Başvurusu Reddedildi";
+        String message = String.format(
+                "Merhaba %s %s,\n\n" +
+                        "Yapmış olduğunuz şirket başvurusu değerlendirilmiş ve uygun bulunmamıştır.\n" +
+                        "Lütfen kayıt için yüklediğiniz evrak ve bilgileri kontrol ediniz. \n\n" +
+                        "HrWebsiteProject Ekibi (Başak 🌟, Anıl 🐧, Mert 🦁, Eren 🙊)",
+                user.getFirstName(),
+                user.getLastName()
+        );
+
+        mailSenderService.sendInformationMail(new WelcomeMailRequestDto(
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),

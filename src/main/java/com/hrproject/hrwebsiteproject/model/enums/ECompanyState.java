@@ -1,5 +1,5 @@
 package com.hrproject.hrwebsiteproject.model.enums;
 
 public enum ECompanyState {
-    PENDING, IN_REVIEW, ACTIVE, DENIED
+    PENDING, IN_REVIEW, ACTIVE, REJECTED
 }

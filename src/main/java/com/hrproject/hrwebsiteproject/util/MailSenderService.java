@@ -44,7 +44,7 @@ public class MailSenderService {
         javaMailSender.send(simpleMailMessage);
     }
     @Async
-    public void sendWelcomeMail(WelcomeMailRequestDto mailModel) {
+    public void sendInformationMail(WelcomeMailRequestDto mailModel) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
         simpleMailMessage.setTo(mailModel.email());

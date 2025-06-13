@@ -32,6 +32,7 @@ EndPoints {
     public static final String APPROVE_USER_AND_COMPANY = "/approve-user-and-company";
     public static final String UPDATE_CONTENT = "/update-content";
     public static final String ADMIN_DASHBOARD = "/dashboard";
+    public static final String REJECT_COMPANY = "/reject-company";
     //Public API Controller Method API Endpoints
     public static final String HOMEPAGE_CONTENT = "/homepage-content";
     public static final String PLATFORM_FEATURES = "/platform-features";

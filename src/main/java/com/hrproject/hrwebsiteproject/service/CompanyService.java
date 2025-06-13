@@ -27,9 +27,7 @@ public class CompanyService {
         return companyRepository.findByUserId(id);
     }
 
-//    public int count() {
-//        return (int) companyRepository.count();
-//    }
+
 
     public int countAll() {
         return (int) companyRepository.count();
@@ -38,4 +36,8 @@ public class CompanyService {
     public int countPending() {
         return Math.toIntExact(companyRepository.countByState((ECompanyState.PENDING)));
     }
+    public Optional<Company> findByCompanyId(Long companyId) {
+        return companyRepository.findById(companyId);
+    }
+
 }
