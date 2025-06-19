@@ -21,6 +21,7 @@ EndPoints {
     public static final String LEAVE_TYPE = ROOT + "/leave-type";
     public static final String COMPANY_LEAVE_TYPE = ROOT + "/company-leave-type";
     public static final String EMPLOYEE_LEAVE_CONTROLLER = ROOT + "/employee-leave-controller";
+    public static final String FILE = ROOT + "/file";
 
     //Authentication API Controller Method  Endpoints
     public static final String REGISTER = "/register";
@@ -89,4 +90,9 @@ EndPoints {
     //EmployeeLeave API Controller Method  Endpoints
     public static final String EMPLOYEE_LEAVE_REQUEST = "/employee-leave-request";
 
+    //File Upload API Controller Method  Endpoints
+    public static final String UPLOAD_PDF_JPG = "/upload-pdf-jpg";
+    public static final String LIST_FILES = "/files/list";
+    public static final String DOWNLOAD_FILE = "/files/download";
+    public static final String DELETE_FILE = "/files/delete";
 }

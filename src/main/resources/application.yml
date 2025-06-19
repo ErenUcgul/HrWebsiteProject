@@ -57,7 +57,8 @@ hrwebsite:
   superadmin:
     email: admin@hr.com
     password: Admin1234
-
+file:
+  upload-dir: uploads/
 #logging:
 #  level:
 #    root: trace

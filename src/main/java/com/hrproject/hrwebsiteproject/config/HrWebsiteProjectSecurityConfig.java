@@ -63,7 +63,12 @@ public class HrWebsiteProjectSecurityConfig {
                                 "v1/dev/company-leave-type/assign-leave-type",
                                 "v1/dev/company-leave-type/assign-leave-type",
                                 "v1/dev/employee-leave-controller/employee-leave-request",
-                                "v1/dev/company-leave-type/approve-or-reject-leave").permitAll()
+                                "v1/dev/company-leave-type/approve-or-reject-leave",
+                                "v1/dev/file/upload-pdf",
+                                "v1/dev/file/upload-pdf-jpg",
+                                "v1/dev/file/files/list",
+                                "v1/dev/file/files/download",
+                                "v1/dev/file/files/delete").permitAll()
 
                         .requestMatchers("/admin/**", "/v1/dev/post/show-all-post", "v1/dev/auth/verify-email",
                                 "v1/dev/admin/approve-user-and-company", "v1/dev/auth/login", "v1/dev/auth/forgot-password",
