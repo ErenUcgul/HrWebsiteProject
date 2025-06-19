@@ -28,7 +28,7 @@ public class Employee extends BaseEntity {
     @Column(nullable = false, unique = true, length = 11)
     private String identityNo;
     @Column(nullable = false)
-    @Past(message = "Doğum tarihi geçmiş bir tarih olmalıdır")
+    @Past
     private LocalDate birthDate;
     private String address;
     @Enumerated(EnumType.STRING)
@@ -44,6 +44,6 @@ public class Employee extends BaseEntity {
     private EEmploymentStatus employmentStatus;
     @Column(nullable = false, unique = true)
     private String socialSecurityNumber;
-    //
+
     private Long companyId;
 }

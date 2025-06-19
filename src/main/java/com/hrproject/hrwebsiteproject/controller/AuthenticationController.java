@@ -79,9 +79,6 @@ public class AuthenticationController {
 
     @PostMapping(EndPoints.LOGOUT)
     public ResponseEntity<BaseResponse<Boolean>> logout() {
-        // Eğer token blacklist veya session yönetimi yoksa,
-        // logout genelde client tarafında token silinmesiyle gerçekleşir.
-        // Eğer token blacklist varsa, token'u blacklist'e ekleyebilirsin.
 
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
                 .code(200)

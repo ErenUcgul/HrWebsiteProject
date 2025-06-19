@@ -31,4 +31,5 @@ public class CompanyController {
                 .message("Şirket yöneticisi dashboard verisi başarıyla getirildi.")
                 .build());
     }
+
 }

@@ -1,5 +1,6 @@
 package com.hrproject.hrwebsiteproject.mapper;
 
+import com.hrproject.hrwebsiteproject.model.dto.request.EmployeeUpdateRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.RegisterRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.UpdateProfileRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.RegisterResponseDto;
@@ -20,5 +21,8 @@ public interface UserMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromDto(UpdateProfileRequestDto dto, @MappingTarget User user);
-
+    @Mapping(target = "gender", ignore = true)
+    @Mapping(target = "userRole", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateUserFromEmployeeDto(EmployeeUpdateRequestDto dto, @MappingTarget User user);
 }

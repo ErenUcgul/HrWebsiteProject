@@ -4,6 +4,9 @@ import com.hrproject.hrwebsiteproject.model.entity.Company;
 import com.hrproject.hrwebsiteproject.model.enums.ECompanyState;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
@@ -11,5 +14,10 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Optional<Company> findByUserId(Long userId);
 
-    Long countByState(ECompanyState state);
+    int countByState(ECompanyState state);
+
+    int countByCreateAtGreaterThan(Long timestamp);
+
+    List<Company> findAllByState(ECompanyState state);
+
 }

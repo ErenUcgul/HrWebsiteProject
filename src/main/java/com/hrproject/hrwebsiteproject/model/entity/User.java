@@ -41,14 +41,12 @@ public class User extends BaseEntity {
     private Egender gender;
     @Enumerated(EnumType.STRING)
     private EUserState state;
-
-
     @Enumerated(EnumType.STRING)
 //    @Column(nullable = false)
     private EUserRole userRole;
     private String activationCode;
     private String passwordResetCode;
-    //
+
     private LocalDateTime passwordResetCodeExpireDate;
     private Integer resetAttemptCount;
 

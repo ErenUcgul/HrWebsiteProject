@@ -18,6 +18,9 @@ EndPoints {
     public static final String ADMIN = ROOT + "/admin";
     public static final String COMPANY = ROOT + "/company";
     public static final String EMPLOYEE = ROOT + "/employee";
+    public static final String LEAVE_TYPE = ROOT + "/leave-type";
+    public static final String COMPANY_LEAVE_TYPE = ROOT + "/company-leave-type";
+    public static final String EMPLOYEE_LEAVE_CONTROLLER = ROOT + "/employee-leave-controller";
 
     //Authentication API Controller Method  Endpoints
     public static final String REGISTER = "/register";
@@ -33,6 +36,19 @@ EndPoints {
     public static final String UPDATE_CONTENT = "/update-content";
     public static final String ADMIN_DASHBOARD = "/dashboard";
     public static final String REJECT_COMPANY = "/reject-company";
+    public static final String LIST_COMPANIES_BY_STATES = "/list-companies-by-states";
+    public static final String USER_STATE_LIST = "/user-state-list";
+    public static final String USER_STATE_PENDING = "/user-state-pending";
+    public static final String USER_STATE_ACTIVE = "/user-state-active";
+    public static final String USER_STATE_INACTIVE = "/user-state-inactive";
+    public static final String USER_STATE_REJECTED = "/user-state-rejected";
+    public static final String USER_STATE_IN_REVIEW = "/user-state-in-review";
+    public static final String COMPANY_STATE_IN_REVIEW = "/company-state-in-review";
+    public static final String COMPANY_STATE_ACTIVE = "/company-state-active";
+    public static final String COMPANY_STATE_INACTIVE = "/company-state-inactive";
+    public static final String COMPANY_STATE_PENDING = "/company-state-pending";
+    public static final String COMPANY_STATE_REJECTED = "/company-state-rejected";
+
     //Public API Controller Method API Endpoints
     public static final String HOMEPAGE_CONTENT = "/homepage-content";
     public static final String PLATFORM_FEATURES = "/platform-features";
@@ -51,4 +67,26 @@ EndPoints {
 
     //Employee API Controller Method Endpoints
     public static final String EMPLOYEE_DASHBOARD = "/dashboard";
+    public static final String CREATE_EMPLOYEE = "/create-employee";
+    public static final String UPDATE_EMPLOYEE = "/update-employee";
+    public static final String DELETE_EMPLOYEE = "/delete-employee";
+    public static final String ACTIVATE_EMPLOYEE = "/activate-employee";
+    public static final String DEACTIVATE_EMPLOYEE = "/deactivate-employee";
+    public static final String LIST_ALL_EMPLOYEES = "/list-all-employees";
+    public static final String GET_EMPLOYEE_DETAILS = "/get-employee-details";
+
+    //LeaveType API Controller Method  Endpoints
+    public static final String CREATE_LEAVE_TYPE = "/create-leave-type";
+    public static final String UPDATE_LEAVE_TYPE = "/update-leave-type";
+    public static final String DELETE_LEAVE_TYPE = "/delete-leave-type";
+    public static final String LIST_LEAVE_TYPE = "/list-leave-type";
+
+    //LeaveType API Controller Method  Endpoints
+    public static final String ASSIGN_COMPANY_LEAVE_TYPE = "/assign-leave-type";
+    public static final String LIST_COMPANY_LEAVE_TYPE = "/list-company-leave-type";
+    public static final String APPROVE_OR_REJECT_LEAVE = "/approve-or-reject-leave";
+
+    //EmployeeLeave API Controller Method  Endpoints
+    public static final String EMPLOYEE_LEAVE_REQUEST = "/employee-leave-request";
+
 }

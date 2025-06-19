@@ -13,10 +13,17 @@ spring:
           auth: true
           starttls:
             enable: true
+            # file upload için
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
   security:
     user:
       name: user
       password: admin
+
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres

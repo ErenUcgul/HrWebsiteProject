@@ -3,7 +3,6 @@ package com.hrproject.hrwebsiteproject.mapper;
 import com.hrproject.hrwebsiteproject.model.dto.request.RegisterRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.RegisterResponseDto;
 import com.hrproject.hrwebsiteproject.model.entity.Company;
-import com.hrproject.hrwebsiteproject.model.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;

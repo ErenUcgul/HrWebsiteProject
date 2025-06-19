@@ -44,7 +44,23 @@ public enum ErrorType {
     COMPANY_ALREADY_REJECTED(4026,"Şirket zaten reddedilmiş" ,HttpStatus.BAD_REQUEST ),
     COMPANY_ALREADY_APPROVED(4027,"Şirket zaten onaylanmış" ,HttpStatus.BAD_REQUEST ),
     USER_STATE_IS_PENDING(4028,"Kullanıcı PENDING durumunda." ,HttpStatus.BAD_REQUEST ),
-    COMPANY_STATE_IS_PENDING(4029,"Şirket PENDING durumunda." ,HttpStatus.BAD_REQUEST ),;
+    COMPANY_STATE_IS_PENDING(4029,"Şirket PENDING durumunda." ,HttpStatus.BAD_REQUEST ),
+    EMPLOYEE_NOT_FOUND(4030,"Personel Bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    IDENTITY_NO_ALREADY_EXISTS(4031, "Bu TC kimlik numarası zaten kayıtlı.", HttpStatus.BAD_REQUEST ),
+    SOCIAL_SECURITY_ALREADY_EXISTS(4032, "Bu SGK numarası zaten kayıtlı.", HttpStatus.BAD_REQUEST ),
+    PHONE_ALREADY_EXISTS(4033, "Bu telefon numarası zaten kayıtlı.", HttpStatus.BAD_REQUEST ),
+    AGE_LESS_THAN_15(4034, "Çalışan en az 15 yaşında olmalıdır.", HttpStatus.BAD_REQUEST ),
+    INVALID_USER_ROLE(4035, "Personel kaydı için rol sadece EMPLOYEE olabilir.", HttpStatus.BAD_REQUEST ),
+    ACCESS_DENIED(4036,"Giriş yetkiniz yok" , HttpStatus.BAD_REQUEST ),
+    LEAVE_TYPE_ALREADY_EXISTS(4037, "İzin türü zaten oluşturulmuş",HttpStatus.BAD_REQUEST ),
+    LEAVE_TYPE_NOT_FOUND(4038,"İzin türü bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    LEAVE_TYPE_ALREADY_ASSIGNED_TO_COMPANY(4039,"İzin türü zaten şirketinize atandı" ,HttpStatus.BAD_REQUEST ),
+    LEAVE_TYPE_NOT_ALLOWED(4040,"İzin türünü seçmenize izin verilmiyor" ,HttpStatus.BAD_REQUEST ),
+    LEAVE_DAY_LIMIT_EXCEEDED(4041,"İzin verilenden fazla izin günü seçtiniz" ,HttpStatus.BAD_REQUEST ),
+    SENIORITY_LEAVE_MISMATCH(4042,"Kıdeminizden fazla yıllık izin türü seçtiniz" ,HttpStatus.BAD_REQUEST ),
+    COMPANY_LEAVE_TYPE_NOT_FOUND(4043,"Şirket izin tipi bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    LEAVE_REQUEST_NOT_FOUND(4044,"İzin isteği bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    LEAVE_ALREADY_PROCESSED(4045,"İzin zaten işlemde" ,HttpStatus.BAD_REQUEST ),;
 
 
     int code;

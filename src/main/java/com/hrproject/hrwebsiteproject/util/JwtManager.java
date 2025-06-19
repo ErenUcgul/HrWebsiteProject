@@ -22,7 +22,7 @@ public class JwtManager {
     private String secretKey;
     @Value("${hrwebsite.jwt.issuer}")
     private String issuer;
-    private Long expTime = 60L;
+    private Long expTime = 900L;
 
     public String generateToken(Long userId, EUserRole role) {
         Algorithm algoritm = Algorithm.HMAC512(secretKey);

@@ -4,6 +4,7 @@ import com.hrproject.hrwebsiteproject.exceptions.ErrorType;
 import com.hrproject.hrwebsiteproject.exceptions.HrWebsiteProjectException;
 import com.hrproject.hrwebsiteproject.mapper.UserMapper;
 import com.hrproject.hrwebsiteproject.model.dto.request.*;
+import com.hrproject.hrwebsiteproject.model.dto.response.UserStateInfoResponse;
 import com.hrproject.hrwebsiteproject.model.entity.User;
 import com.hrproject.hrwebsiteproject.model.enums.EUserRole;
 import com.hrproject.hrwebsiteproject.model.enums.EUserState;
@@ -12,10 +13,13 @@ import com.hrproject.hrwebsiteproject.util.CodeGenerator;
 import com.hrproject.hrwebsiteproject.util.JwtManager;
 import com.hrproject.hrwebsiteproject.util.MailSenderService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -193,5 +197,41 @@ public class UserService {
 
     public int countAll() {
         return (int) userRepository.count();
+    }
+
+    public int countByState(EUserState eUserState) {
+        return userRepository.countByState(eUserState);
+    }
+
+    public int countUsersRegisteredLast7Days() {
+        long sevenDaysAgo = System.currentTimeMillis() - (7L * 24 * 60 * 60 * 1000);
+        return userRepository.countByCreateAtGreaterThan(sevenDaysAgo);
+    }
+
+    public List<UserStateInfoResponse> getAllUsersWithStateInfo() {
+        return userRepository.findAll().stream()
+                .map(u -> UserStateInfoResponse.builder()
+                        .id(u.getId())
+                        .fullName(u.getFirstName() + " " + u.getLastName())
+                        .state(u.getState())
+                        .build())
+                .toList();
+    }
+
+    public List<UserStateInfoResponse> getUsersByState(EUserState state) {
+        return userRepository.findByState(state).stream()
+                .map(user -> new UserStateInfoResponse(
+                        user.getId(),user.getFirstName() + " " + user.getLastName(),
+                        user.getState()
+                ))
+                .toList();
+    }
+
+    public boolean existsByPhone(@NotBlank(message = "Telefon numarası boş olamaz.") String phone) {
+        return userRepository.existsByPhone(phone);
+    }
+
+    public boolean existsByMail(@NotBlank(message = "Mail boş olamaz.") String mail) {
+        return userRepository.existsByEmail(mail);
     }
 }

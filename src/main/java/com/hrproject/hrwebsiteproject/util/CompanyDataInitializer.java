@@ -4,6 +4,8 @@ import com.hrproject.hrwebsiteproject.model.dto.request.RegisterRequestDto;
 import com.hrproject.hrwebsiteproject.model.enums.ECompanyType;
 import com.hrproject.hrwebsiteproject.model.enums.ERegion;
 import com.hrproject.hrwebsiteproject.model.enums.Egender;
+import com.hrproject.hrwebsiteproject.service.CompanyService;
+import com.hrproject.hrwebsiteproject.service.EmployeeService;
 import com.hrproject.hrwebsiteproject.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -12,9 +14,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class DataInitializer {
+public class CompanyDataInitializer {
 
     private final RegistrationService registrationService;
+    private final CompanyService companyService;
+    private final EmployeeService employeeService;
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
@@ -71,6 +75,7 @@ public class DataInitializer {
                 null,
                 ECompanyType.CONSTRUCTION
         );
+
 
         try {
             registrationService.registerWithCompany(company2);
