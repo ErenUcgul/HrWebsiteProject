@@ -5,12 +5,10 @@ import com.hrproject.hrwebsiteproject.exceptions.HrWebsiteProjectException;
 import com.hrproject.hrwebsiteproject.model.dto.response.CompanyStateInfoResponse;
 import com.hrproject.hrwebsiteproject.model.entity.Company;
 import com.hrproject.hrwebsiteproject.model.enums.ECompanyState;
-import com.hrproject.hrwebsiteproject.model.enums.EUserState;
 import com.hrproject.hrwebsiteproject.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,5 +68,9 @@ public class CompanyService {
         return companyRepository.findByUserId(userId)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND))
                 .getId();
+    }
+
+    public Optional<Company> findById(Long id) {
+        return companyRepository.findById(id);
     }
 }

@@ -77,7 +77,16 @@ public class HrWebsiteProjectSecurityConfig {
                                 "v1/dev/shift/update-shift-assign",
                                 "v1/dev/shift/delete-shift-assign",
                                 "v1/dev/shift/get-shift-by-employee",
-                                "/v1/dev/shift/get-employee-by-shift"
+                                "/v1/dev/shift/get-employee-by-shift",
+                                "v1/dev/employee-expense-controller/create-expense",
+                                "v1/dev/employee-expense-controller/my-expenses",
+                                "v1/dev/salary-payment-controller/generate-salary",
+                                "v1/dev/employee-expense-controller/update-expense",
+                                "v1/dev/employee-expense-controller/delete-expense",
+                                "v1/dev/employee-expense-controller/approved-expenses",
+                                "v1/dev/employee-expense-controller/rejected-expenses",
+                                "v1/dev/employee-expense-controller/pending-expenses",
+                                "v1/dev/employee-expense-controller/list-all-expenses"
                         ).permitAll()
 
                         .requestMatchers("/admin/**",
