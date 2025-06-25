@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -55,11 +56,21 @@ public class EmployeeLeaveService {
             throw new HrWebsiteProjectException(ErrorType.LEAVE_DAY_LIMIT_EXCEEDED);
         }
 
+
         // 4. Kıdeme göre yıllık izin kontrolü
         if (leaveType.getName().startsWith("ANNUAL_LEAVE")) {
             long yearsWorked = ChronoUnit.YEARS.between(employee.getDateOfEmployment(), LocalDate.now());
+
             if (!isMatchingSeniorityLeaveType(leaveType.getName(), yearsWorked)) {
                 throw new HrWebsiteProjectException(ErrorType.SENIORITY_LEAVE_MISMATCH);
+            }
+
+            // Kullanılmış + bekleyen yıllık izin günleri
+            int usedDays = employeeLeaveRepository
+                    .getRequestedAndApprovedLeaveDays(employeeId, companyLeaveType.getId());
+
+            if ((usedDays + requestedDays) > companyLeaveType.getDefaultDayCount()) {
+                throw new HrWebsiteProjectException(ErrorType.LEAVE_DAY_LIMIT_EXCEEDED);
             }
         }
 
@@ -82,6 +93,7 @@ public class EmployeeLeaveService {
                 (yearsWorked >= 5 && yearsWorked < 15 && leaveTypeName.contains("5-15")) ||
                 (yearsWorked >= 15 && leaveTypeName.contains("15"));
     }
+
 
     public EmployeeLeaveResponseDto approveOrRejectLeave(LeaveApprovalRequestDto dto, Long companyId) {
         EmployeeLeave leave = employeeLeaveRepository.findById(dto.leaveRequestId())
@@ -110,5 +122,63 @@ public class EmployeeLeaveService {
         LeaveType leaveType = leaveTypeService.findById(companyLeaveType.getLeaveTypeId());
 
         return employeeLeaveMapper.toResponseDto(leave, leaveType);
+    }
+
+    //20.06
+    public List<EmployeeLeaveResponseDto> getLeavesByEmployeeId(Long employeeId) {
+        List<EmployeeLeave> leaves = employeeLeaveRepository.findAllByEmployeeId(employeeId);
+        return leaves.stream()
+                .map(leave -> {
+                    CompanyLeaveType clt = companyLeaveTypeService.findById(leave.getCompanyLeaveTypeId());
+                    LeaveType leaveType = leaveTypeService.findById(clt.getLeaveTypeId());
+                    return employeeLeaveMapper.toResponseDto(leave, leaveType);
+                })
+                .toList();
+    }
+
+
+    public EmployeeLeaveResponseDto updateLeaveRequest(Long leaveRequestId, EmployeeLeaveRequestDto dto, Long employeeId) {
+        EmployeeLeave leave = employeeLeaveRepository.findById(leaveRequestId)
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.LEAVE_REQUEST_NOT_FOUND));
+
+        if (!leave.getEmployeeId().equals(employeeId))
+            throw new HrWebsiteProjectException(ErrorType.ACCESS_DENIED);
+
+        if (!leave.getLeaveStatus().equals(ELeaveStatus.PENDING))
+            throw new HrWebsiteProjectException(ErrorType.LEAVE_ALREADY_PROCESSED);
+
+        // Şirket ve izin bilgileri tekrar kontrol edilir
+        CompanyLeaveType clt = companyLeaveTypeService.findById(dto.companyLeaveTypeId());
+        LeaveType leaveType = leaveTypeService.findById(clt.getLeaveTypeId());
+
+        long requestedDays = ChronoUnit.DAYS.between(dto.startDate(), dto.endDate()) + 1;
+        if ((leaveType.getName().startsWith("ANNUAL_LEAVE"))
+                && (requestedDays > clt.getDefaultDayCount())) {
+            throw new HrWebsiteProjectException(ErrorType.LEAVE_DAY_LIMIT_EXCEEDED);
+        }
+
+        leave.setStartDate(dto.startDate());
+        leave.setEndDate(dto.endDate());
+        leave.setReason(dto.reason());
+        leave.setTotalDays((int) requestedDays);
+        leave.setCompanyLeaveTypeId(dto.companyLeaveTypeId());
+
+        employeeLeaveRepository.save(leave);
+
+        return employeeLeaveMapper.toResponseDto(leave, leaveType);
+    }
+
+
+    public void cancelLeaveRequest(Long leaveRequestId, Long employeeId) {
+        EmployeeLeave leave = employeeLeaveRepository.findById(leaveRequestId)
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.LEAVE_REQUEST_NOT_FOUND));
+
+        if (!leave.getEmployeeId().equals(employeeId))
+            throw new HrWebsiteProjectException(ErrorType.ACCESS_DENIED);
+
+        if (!leave.getLeaveStatus().equals(ELeaveStatus.PENDING))
+            throw new HrWebsiteProjectException(ErrorType.LEAVE_ALREADY_PROCESSED);
+
+        employeeLeaveRepository.delete(leave);
     }
 }

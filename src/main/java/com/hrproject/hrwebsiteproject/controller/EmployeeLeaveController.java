@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(EndPoints.EMPLOYEE_LEAVE_CONTROLLER)
 @RequiredArgsConstructor
@@ -64,5 +66,103 @@ public class EmployeeLeaveController {
 //                .data(response)
 //                .build());
 //    }
+//    @GetMapping(EndPoints.MY_LEAVES)
+//    public ResponseEntity<BaseResponse<List<EmployeeLeaveResponseDto>>> getMyLeaves(@RequestHeader String token) {
+//        Long userId = jwtManager.getUserIdFromToken(token);
+//        Long employeeId = employeeService.getEmployeeIdByUserId(userId);
+//
+//        List<EmployeeLeaveResponseDto> leaves = employeeLeaveService.getLeavesByEmployeeId(employeeId);
+//
+//        return ResponseEntity.ok(BaseResponse.<List<EmployeeLeaveResponseDto>>builder()
+//                .code(200)
+//                .success(true)
+//                .message("İzin talepleriniz listelendi.")
+//                .data(leaves)
+//                .build());
+//    }
+//
+//
+//    @PutMapping(EndPoints.UPDATE_LEAVE_REQUEST)
+//    public ResponseEntity<BaseResponse<EmployeeLeaveResponseDto>> updateLeaveRequest(
+//            @RequestHeader String token,
+//            @RequestParam Long leaveRequestId,
+//            @RequestBody @Valid EmployeeLeaveRequestDto dto) {
+//
+//        Long userId = jwtManager.getUserIdFromToken(token);
+//        Long employeeId = employeeService.getEmployeeIdByUserId(userId);
+//
+//        EmployeeLeaveResponseDto updated = employeeLeaveService.updateLeaveRequest(leaveRequestId, dto, employeeId);
+//
+//        return ResponseEntity.ok(BaseResponse.<EmployeeLeaveResponseDto>builder()
+//                .code(200)
+//                .success(true)
+//                .message("İzin talebi güncellendi.")
+//                .data(updated)
+//                .build());
+//    }
+//
+//    @DeleteMapping(EndPoints.CANCEL_LEAVE_REQUEST)
+//    public ResponseEntity<BaseResponse<Boolean>> cancelLeaveRequest(
+//            @RequestHeader String token,
+//            @RequestParam Long leaveRequestId) {
+//
+//        Long userId = jwtManager.getUserIdFromToken(token);
+//        Long employeeId = employeeService.getEmployeeIdByUserId(userId);
+//
+//        employeeLeaveService.cancelLeaveRequest(leaveRequestId, employeeId);
+//
+//        return ResponseEntity.ok(BaseResponse.<Boolean>builder()
+//                .code(200)
+//                .success(true)
+//                .message("İzin talebi iptal edildi.")
+//                .data(true)
+//                .build());
+//    }
+
+    @GetMapping(EndPoints.MY_LEAVES)
+    public ResponseEntity<BaseResponse<List<EmployeeLeaveResponseDto>>> getMyLeaves(
+            @RequestParam Long employeeId) {
+
+        List<EmployeeLeaveResponseDto> leaves = employeeLeaveService.getLeavesByEmployeeId(employeeId);
+
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeLeaveResponseDto>>builder()
+                .code(200)
+                .success(true)
+                .message("İzin talepleri listelendi.")
+                .data(leaves)
+                .build());
+    }
+
+    @PutMapping(EndPoints.UPDATE_LEAVE_REQUEST)
+    public ResponseEntity<BaseResponse<EmployeeLeaveResponseDto>> updateLeaveRequest(
+            @RequestParam Long employeeId,
+            @RequestParam Long leaveRequestId,
+            @RequestBody @Valid EmployeeLeaveRequestDto dto) {
+
+        EmployeeLeaveResponseDto updated = employeeLeaveService.updateLeaveRequest(leaveRequestId, dto, employeeId);
+
+        return ResponseEntity.ok(BaseResponse.<EmployeeLeaveResponseDto>builder()
+                .code(200)
+                .success(true)
+                .message("İzin talebi güncellendi.")
+                .data(updated)
+                .build());
+    }
+
+    @DeleteMapping(EndPoints.CANCEL_LEAVE_REQUEST)
+    public ResponseEntity<BaseResponse<Boolean>> cancelLeaveRequest(
+            @RequestParam Long employeeId,
+            @RequestParam Long leaveRequestId) {
+
+        employeeLeaveService.cancelLeaveRequest(leaveRequestId, employeeId);
+
+        return ResponseEntity.ok(BaseResponse.<Boolean>builder()
+                .code(200)
+                .success(true)
+                .message("İzin talebi iptal edildi.")
+                .data(true)
+                .build());
+    }
+
 
 }

@@ -23,6 +23,8 @@ EndPoints {
     public static final String EMPLOYEE_LEAVE_CONTROLLER = ROOT + "/employee-leave-controller";
     public static final String FILE = ROOT + "/file";
     public static final String SHIFT= ROOT + "/shift";
+    public static final String EMPLOYEE_EXPENSE_CONTROLLER = ROOT + "/employee-expense-controller";
+    public static final String SALARY_PAYMENT_CONTROLLER = ROOT + "/salary-payment-controller";
 
     //Authentication API Controller Method  Endpoints
     public static final String REGISTER = "/register";
@@ -87,6 +89,9 @@ EndPoints {
     public static final String ASSIGN_COMPANY_LEAVE_TYPE = "/assign-leave-type";
     public static final String LIST_COMPANY_LEAVE_TYPE = "/list-company-leave-type";
     public static final String APPROVE_OR_REJECT_LEAVE = "/approve-or-reject-leave";
+    public static final String UPDATE_LEAVE_REQUEST = "/update-leave-request";
+    public static final String MY_LEAVES = "/my-leaves";
+    public static final String CANCEL_LEAVE_REQUEST = "/cancel-leave-request";
 
     //EmployeeLeave API Controller Method  Endpoints
     public static final String EMPLOYEE_LEAVE_REQUEST = "/employee-leave-request";
@@ -97,6 +102,19 @@ EndPoints {
     public static final String DOWNLOAD_FILE = "/files/download";
     public static final String DELETE_FILE = "/files/delete";
 
+    //Employee Expense API Controller Method  Endpoints
+    public static final String CREATE_EXPENSE = "/create-expense";
+    public static final String MY_EXPENSES = "/my-expenses";
+    public static final String APPROVE_OR_REJECT_EXPENSE = "/approve-or-reject-expense";
+    public static final String UPDATE_EXPENSE = "/update-expense";
+    public static final String DELETE_EXPENSE = "/delete-expense";
+    public static final String APPROVED_EXPENSES = "/approved-expenses";
+    public static final String REJECTED_EXPENSES = "/rejected-expenses";
+    public static final String PENDING_EXPENSES = "/pending-expenses";
+    public static final String LIST_ALL_EXPENSES = "/list-all-expenses";
+
+    //Salary Payment Controller Method Endpoints
+    public static final String GENERATE_SALARY = "/generate-salary";
     // Shift and Shift Tracking API Controller Method Endpoints
     public static final String CREATE_SHIFT = "/create-shift";
     public static final String LIST_SHIFTS = "/list-shifts";
@@ -107,4 +125,5 @@ EndPoints {
     public static final String DELETE_SHIFT_ASSIGN = "/delete-shift-assign";
     public static final String GET_SHIFT_BY_EMPLOYEE = "/get-shift-by-employee";
     public static final String GET_EMPLOYEE_BY_SHIFT = "/get-employee-by-shift";
+
 }
