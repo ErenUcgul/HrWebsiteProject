@@ -86,7 +86,15 @@ public class HrWebsiteProjectSecurityConfig {
                                 "v1/dev/employee-expense-controller/approved-expenses",
                                 "v1/dev/employee-expense-controller/rejected-expenses",
                                 "v1/dev/employee-expense-controller/pending-expenses",
-                                "v1/dev/employee-expense-controller/list-all-expenses"
+                                "v1/dev/employee-expense-controller/list-all-expenses",
+                                "v1/dev/embezzlement/delete-by-user",
+                                "v1/dev/embezzlement/my-list",
+                                "v1/dev/embezzlement/assign",
+                                "v1/dev/embezzlement/list",
+                                "v1/dev/embezzlement/add",
+                                "v1/dev/material/create",
+                                "v1/dev/material/list",
+                                "v1/dev/embezzlement/return-embezzlement"
                         ).permitAll()
 
                         .requestMatchers("/admin/**",

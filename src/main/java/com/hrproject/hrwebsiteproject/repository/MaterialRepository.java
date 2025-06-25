@@ -1,0 +1,11 @@
+package com.hrproject.hrwebsiteproject.repository;
+
+import com.hrproject.hrwebsiteproject.model.entity.Material;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface MaterialRepository extends JpaRepository<Material, Long> {
+    List<Material> findAllByActiveTrue();
+    boolean existsBySerialNumber(String serialNumber);
+}

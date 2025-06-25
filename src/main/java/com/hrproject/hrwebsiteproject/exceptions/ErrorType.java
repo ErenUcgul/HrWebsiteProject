@@ -76,7 +76,17 @@ public enum ErrorType {
     INVALID_DATE_RANGE(6003,"Geçersiz tarih aralığı" ,HttpStatus.BAD_REQUEST ),
     SHIFT_ALREADY_ASSIGNED_TO_ANOTHER_EMPLOYEE(6004,"Bu vardiya zaten başka çalışana atanmış" ,HttpStatus.BAD_REQUEST ),
     SHIFT_DATE_CONFLICT(6005,"Çalışanın belirtilen tarih aralığında başka bir vardiyası bulunuyor." ,HttpStatus.BAD_REQUEST),
-    SHIFT_ASSIGNMENT_NOT_FOUND(6006,"Vardiya ataması bulunamadı." ,HttpStatus.BAD_REQUEST ),;
+    SHIFT_ASSIGNMENT_NOT_FOUND(6006,"Vardiya ataması bulunamadı." ,HttpStatus.BAD_REQUEST ),
+    NOTFOUND_USER(5000,"Kullanıcı bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    NOTFOUND_COMPANY(5001,"Şirket bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    NOTFOUND_PERSONALDOCUMENT(5002,"Personel dökümanı bulunamadı" ,HttpStatus.BAD_REQUEST ),
+    MANAGER_AND_PERSONAL_NOT_SAME_COMPANY(5003,"Yönetici ve personel aynı şirkette değil" ,HttpStatus.BAD_REQUEST ),
+    NOT_FOUND_EMBEZZLEMENT(5004,"Zimmet bulunamadı " ,HttpStatus.BAD_REQUEST ),
+    NOTFOUND_EMBEZZLEMENT(5005,"Zimmet kaydı bulunamadı.",HttpStatus.BAD_REQUEST ),
+    MATERIAL_ALREADY_EXISTS(5006,"Materyal zaten sistemde kayıtlı. Lütfen farklı bir materyal giriniz.",HttpStatus.BAD_REQUEST ),
+    NOTFOUND_MATERIAL(5007,"Belirtilen materyal bulunamadı.",HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED_ACCESS(5008,"Bu zimmeti iade etme yetkiniz yok.",HttpStatus.UNAUTHORIZED ),
+    EMBEZZLEMENT_ALREADY_RETURNED(5009,"Bu zimmet zaten iade edilmiş.",HttpStatus.BAD_REQUEST ),;
 
     int code;
     String message;
