@@ -24,7 +24,6 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String firstName;
     @Column(nullable = false)
@@ -36,7 +35,6 @@ public class User extends BaseEntity {
 //    @Column(nullable = false, length = 15)
     private String phone;
     private String avatar;
-
     @Enumerated(EnumType.STRING)
     private Egender gender;
     @Enumerated(EnumType.STRING)
@@ -46,10 +44,8 @@ public class User extends BaseEntity {
     private EUserRole userRole;
     private String activationCode;
     private String passwordResetCode;
-
     private LocalDateTime passwordResetCodeExpireDate;
     private Integer resetAttemptCount;
-
     private String pendingEmail; // Yeni email doğrulama bekliyor
     private String emailChangeCode; // Email değişiklik kodu
 

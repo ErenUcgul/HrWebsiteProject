@@ -22,6 +22,7 @@ EndPoints {
     public static final String COMPANY_LEAVE_TYPE = ROOT + "/company-leave-type";
     public static final String EMPLOYEE_LEAVE_CONTROLLER = ROOT + "/employee-leave-controller";
     public static final String FILE = ROOT + "/file";
+    public static final String SHIFT= ROOT + "/shift";
 
     //Authentication API Controller Method  Endpoints
     public static final String REGISTER = "/register";
@@ -95,4 +96,15 @@ EndPoints {
     public static final String LIST_FILES = "/files/list";
     public static final String DOWNLOAD_FILE = "/files/download";
     public static final String DELETE_FILE = "/files/delete";
+
+    // Shift and Shift Tracking API Controller Method Endpoints
+    public static final String CREATE_SHIFT = "/create-shift";
+    public static final String LIST_SHIFTS = "/list-shifts";
+    public static final String DELETE_SHIFT = "/delete-shift";
+    public static final String UPDATE_SHIFT = "/update-shift";
+    public static final String ASSIGN_SHIFT = "/assign-shift";
+    public static final String UPDATE_SHIFT_ASSIGN = "/update-shift-assign";
+    public static final String DELETE_SHIFT_ASSIGN = "/delete-shift-assign";
+    public static final String GET_SHIFT_BY_EMPLOYEE = "/get-shift-by-employee";
+    public static final String GET_EMPLOYEE_BY_SHIFT = "/get-employee-by-shift";
 }

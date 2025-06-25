@@ -22,7 +22,6 @@ public class Employee extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false, unique = true)
     private Long userId;
     @Column(nullable = false, unique = true, length = 11)
@@ -44,6 +43,5 @@ public class Employee extends BaseEntity {
     private EEmploymentStatus employmentStatus;
     @Column(nullable = false, unique = true)
     private String socialSecurityNumber;
-
     private Long companyId;
 }
