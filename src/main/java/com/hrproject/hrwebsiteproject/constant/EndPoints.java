@@ -142,4 +142,13 @@ EndPoints {
     public static final String CREATE_MATERIAL = "/create";
     public static final String LIST_MATERIAL = "/list";
 
+    //Company Review Upload API Controller Method  Endpoints
+    public static final String CREATE_COMPANY_REVIEW = "/create-company-review";
+    public static final String LIST_COMPANY_REVIEWS = "/list-company-reviews";
+    public static final String LIST_PENDING_COMPANY_REVIEWS = "/list-pending-company-reviews";
+    public static final String LIST_APPROVED_COMPANY_REVIEWS = "/list-approved-company-reviews";
+    public static final String DELETE_COMPANY_REVIEWS = "/delete-company-review";
+    public static final String UPDATE_COMPANY_REVIEW = "/update-company-review";
+    public static final String APPROVE_OR_REJECT_COMPANY_REVIEW = "/approve-or-reject-company-review";
+    public static final String LIST_ALL_COMPANY_REVIEWS = "/list-all-company-reviews";
 }

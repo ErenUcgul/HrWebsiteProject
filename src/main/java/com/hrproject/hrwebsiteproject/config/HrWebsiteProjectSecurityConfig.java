@@ -94,7 +94,14 @@ public class HrWebsiteProjectSecurityConfig {
                                 "v1/dev/embezzlement/add",
                                 "v1/dev/material/create",
                                 "v1/dev/material/list",
-                                "v1/dev/embezzlement/return-embezzlement"
+                                "v1/dev/embezzlement/return-embezzlement",
+                                "v1/dev/company-review/create-company-review",
+                                "v1/dev/company-review/list-approved-company-reviews",
+                                "v1/dev/company-review/list-pending-company-reviews",
+                                "v1/dev/company-review/approve-or-reject-company-review",
+                                "v1/dev/company-review/delete-company-review",
+                                "v1/dev/company-review/update-company-review",
+                                "v1/dev/company-review/list-all-company-reviews"
                         ).permitAll()
 
                         .requestMatchers("/admin/**",
