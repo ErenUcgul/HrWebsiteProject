@@ -64,7 +64,13 @@ public enum ErrorType {
     FILE_IS_EMPTY(4048, "Dosya boş olamaz", HttpStatus.BAD_REQUEST),
     FILE_NOT_FOUND(4049, "Dosya bulunamadı", HttpStatus.BAD_REQUEST),
     FILE_OPERATION_FAILED(4050, "Dosya işlemi yapılamadı", HttpStatus.BAD_REQUEST),
-    ;
+    OUT_OF_BOUNDARY_SHIFT_HOURS(6000,"24 saatten fazla vardiya tanımlanamaz", HttpStatus.BAD_REQUEST ),
+    SHIFT_NOT_FOUND(6001,"Vardiya bulunamadı" , HttpStatus.BAD_REQUEST ),
+    SHIFT_TIME_CONFLICT(6002,"Vardiya saatleri çakışıyor." ,HttpStatus.BAD_REQUEST ),
+    INVALID_DATE_RANGE(6003,"Geçersiz tarih aralığı" ,HttpStatus.BAD_REQUEST ),
+    SHIFT_ALREADY_ASSIGNED_TO_ANOTHER_EMPLOYEE(6004,"Bu vardiya zaten başka çalışana atanmış" ,HttpStatus.BAD_REQUEST ),
+    SHIFT_DATE_CONFLICT(6005,"Çalışanın belirtilen tarih aralığında başka bir vardiyası bulunuyor." ,HttpStatus.BAD_REQUEST),
+    SHIFT_ASSIGNMENT_NOT_FOUND(6006,"Vardiya ataması bulunamadı." ,HttpStatus.BAD_REQUEST ),;
 
     int code;
     String message;
