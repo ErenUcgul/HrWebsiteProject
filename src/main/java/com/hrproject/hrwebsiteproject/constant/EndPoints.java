@@ -126,4 +126,20 @@ EndPoints {
     public static final String GET_SHIFT_BY_EMPLOYEE = "/get-shift-by-employee";
     public static final String GET_EMPLOYEE_BY_SHIFT = "/get-employee-by-shift";
 
+    // Embezzlement API Controller Root Endpoint
+    public static final String EMBEZZLEMENT = ROOT + "/embezzlement";
+    public static final String RETURN_EMBEZZLEMENT = "/return-embezzlement";
+
+    // Embezzlement API Controller Method Endpoints
+    public static final String ADD_EMBEZZLEMENT = "/add";
+    public static final String GET_EMBEZZLEMENT_LIST = "/list";
+    public static final String ASSIGMENT_EMBEZZLEMENT = "/assign";
+    public static final String GET_ALL_MY_EMBEZZLEMENT_LIST = "/my-list";
+    public static final String DELETE_EMBEZZLEMENT_BY_USERID = "/delete-by-user";
+
+    // Material API Controller Endpoint
+    public static final String MATERIAL = ROOT + "/material";
+    public static final String CREATE_MATERIAL = "/create";
+    public static final String LIST_MATERIAL = "/list";
+
 }
