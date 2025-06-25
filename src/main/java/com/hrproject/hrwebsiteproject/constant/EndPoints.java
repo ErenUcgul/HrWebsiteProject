@@ -25,6 +25,7 @@ EndPoints {
     public static final String SHIFT= ROOT + "/shift";
     public static final String EMPLOYEE_EXPENSE_CONTROLLER = ROOT + "/employee-expense-controller";
     public static final String SALARY_PAYMENT_CONTROLLER = ROOT + "/salary-payment-controller";
+    public static final String COMPANY_REVIEW = ROOT + "/company-review";
 
     //Authentication API Controller Method  Endpoints
     public static final String REGISTER = "/register";
