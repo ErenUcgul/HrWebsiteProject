@@ -1,16 +1,15 @@
 package com.hrproject.hrwebsiteproject.util;
 
 import com.hrproject.hrwebsiteproject.model.dto.request.RegisterRequestDto;
-import com.hrproject.hrwebsiteproject.model.enums.ECompanyType;
-import com.hrproject.hrwebsiteproject.model.enums.ERegion;
-import com.hrproject.hrwebsiteproject.model.enums.Egender;
-import com.hrproject.hrwebsiteproject.service.CompanyService;
-import com.hrproject.hrwebsiteproject.service.EmployeeService;
-import com.hrproject.hrwebsiteproject.service.RegistrationService;
+import com.hrproject.hrwebsiteproject.model.entity.User;
+import com.hrproject.hrwebsiteproject.model.enums.*;
+import com.hrproject.hrwebsiteproject.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -18,7 +17,9 @@ public class CompanyDataInitializer {
 
     private final RegistrationService registrationService;
     private final CompanyService companyService;
-    private final EmployeeService employeeService;
+    private final UserService userService;
+
+
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
@@ -76,26 +77,39 @@ public class CompanyDataInitializer {
                 ECompanyType.CONSTRUCTION
         );
 
+        registerAndApprove(company1);
+        registerAndApprove(company2);
+        registerAndApprove(company3);
 
-        try {
-            registrationService.registerWithCompany(company2);
-            System.out.println("Company2 registered");
-        } catch (Exception e) {
-            System.out.println("Failed to register company2: " + e.getMessage());
-        }
+    }
 
+    private void registerAndApprove(RegisterRequestDto dto) {
         try {
-            registrationService.registerWithCompany(company1);
-            System.out.println("Company1 registered");
-        } catch (Exception e) {
-            System.out.println("Failed to register company1: " + e.getMessage());
-        }
+            registrationService.registerWithCompany(dto);
+            System.out.println("Registered: " + dto.email());
 
-        try {
-            registrationService.registerWithCompany(company3);
-            System.out.println("Company3 registered");
+            Optional<User> userOptional = Optional.ofNullable(userService.findByEmail(dto.email()));
+            userOptional.ifPresent(user -> {
+                try {
+                    // Kullanıcı ve şirket doğrudan burada aktif ediliyor
+                    user.setState(EUserState.ACTIVE);
+                    userService.save(user);
+
+                    companyService.findByUserId(user.getId()).ifPresent(company -> {
+                        company.setState(ECompanyState.ACTIVE);
+                        companyService.save(company);
+                        System.out.println("Company also activated manually for: " + dto.email());
+                    });
+
+                    System.out.println("Manually approved without adminService: " + dto.email());
+
+                } catch (Exception e) {
+                    System.err.println("Manual approval failed for: " + dto.email() + " -> " + e.getMessage());
+                }
+            });
+
         } catch (Exception e) {
-            System.out.println("Failed to register company3: " + e.getMessage());
+            System.out.println("Registration failed for " + dto.email() + ": " + e.getMessage());
         }
     }
 }
