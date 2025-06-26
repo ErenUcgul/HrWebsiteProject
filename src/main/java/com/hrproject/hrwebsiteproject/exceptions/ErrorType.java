@@ -86,7 +86,9 @@ public enum ErrorType {
     MATERIAL_ALREADY_EXISTS(5006,"Materyal zaten sistemde kayıtlı. Lütfen farklı bir materyal giriniz.",HttpStatus.BAD_REQUEST ),
     NOTFOUND_MATERIAL(5007,"Belirtilen materyal bulunamadı.",HttpStatus.BAD_REQUEST),
     UNAUTHORIZED_ACCESS(5008,"Bu zimmeti iade etme yetkiniz yok.",HttpStatus.UNAUTHORIZED ),
-    EMBEZZLEMENT_ALREADY_RETURNED(5009,"Bu zimmet zaten iade edilmiş.",HttpStatus.BAD_REQUEST ),;
+    EMBEZZLEMENT_ALREADY_RETURNED(5009,"Bu zimmet zaten iade edilmiş.",HttpStatus.BAD_REQUEST ),
+    MATERIAL_ALREADY_ASSIGNED(5010,"Bu ürün zaten başka bir kişiye zimmetlenmiş.",HttpStatus.BAD_REQUEST ),
+    EMBEZZLEMENT_ALREADY_ASSIGNED(5011,"Bu zimmet zaten bir kullanıcıya atanmış ve iade edilmemiştir.",HttpStatus.BAD_REQUEST ),;
 
     int code;
     String message;

@@ -13,6 +13,8 @@ public interface EmbezzlementRepository extends JpaRepository<Embezzlement, Long
             @NotNull(message = "Yönetici ID'si boş olamaz.") Long managerId
     );
 
+    //public List<Embezzlement> findAllByUserIdAndActiveTrue(Long userId);
+
     List<Embezzlement> findAllByUserIdAndActiveTrue(
             @NotNull(message = "Kullanıcı ID'si boş olamaz.") Long userId
     );
@@ -21,7 +23,8 @@ public interface EmbezzlementRepository extends JpaRepository<Embezzlement, Long
             @NotNull(message = "Zimmet ID'si boş olamaz.") Long id
     );
 
-    boolean existsByMaterialIdAndActiveTrue(
-            @NotNull(message = "Materyal ID'si boş olamaz.") Long materialId
-    );
+
+    boolean existsByMaterialIdAndIsReturnedFalseAndActiveTrueAndIdNot(Long materialId, Long id);
+
+    boolean existsByMaterialIdAndIsReturnedFalseAndActiveTrue(Long aLong);
 }

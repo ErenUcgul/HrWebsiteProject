@@ -24,9 +24,21 @@ public class EmbezzlementService {
     private final EmbezzlementRepository embezzlementRepository;
     private final EmbezzlementMapper embezzlementMapper;
     private final JwtManager jwtManager;
+    private final MaterialService materialService;
 
     public void addEmbezzlement(AddEmbezzlementRequestDto dto) {
         Long managerId = jwtManager.getUserIdFromToken(dto.token());
+
+        // Material var mı kontrolü
+        materialService.validateMaterialExists(dto.materialId());
+
+        // Material zaten aktif zimmetlenmiş mi?
+        boolean alreadyAssigned = embezzlementRepository
+                .existsByMaterialIdAndIsReturnedFalseAndActiveTrue(dto.materialId());
+
+        if (alreadyAssigned) {
+            throw new HrWebsiteProjectException(ErrorType.MATERIAL_ALREADY_ASSIGNED);
+        }
 
         Embezzlement embezzlement = Embezzlement.builder()
                 .materialId(dto.materialId())
@@ -52,6 +64,11 @@ public class EmbezzlementService {
 
         Embezzlement embezzlement = embezzlementRepository.findById(dto.embezzlementId())
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.NOTFOUND_EMBEZZLEMENT));
+
+        // Eğer zaten atanmışsa (userId doluysa), tekrar atama yapma
+        if (embezzlement.getUserId() != null) {
+            throw new HrWebsiteProjectException(ErrorType.EMBEZZLEMENT_ALREADY_ASSIGNED);
+        }
 
         embezzlement.setUserId(dto.userId());
         embezzlementRepository.save(embezzlement);
@@ -91,9 +108,10 @@ public class EmbezzlementService {
             throw new HrWebsiteProjectException(ErrorType.EMBEZZLEMENT_ALREADY_RETURNED);
         }
 
-        embezzlement.setIsReturned(true);
+        embezzlement.setIsReturned(true);               // Zimmet iade edildi
+        embezzlement.setActive(false);                  // Artık aktif değil
         embezzlement.setReturnDate(LocalDateTime.now());
+
         embezzlementRepository.save(embezzlement);
     }
-
 }

@@ -1,8 +1,9 @@
 package com.hrproject.hrwebsiteproject.model.entity;
 
+import com.hrproject.hrwebsiteproject.model.enums.EEmbezzlementDuration;
+import com.hrproject.hrwebsiteproject.model.enums.EEmbezzlementType;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,19 +24,19 @@ public class Embezzlement {
 
     private Long managerId;
 
-
-    //Zimmetin ilk atandığı tarih.
-    @Column(nullable = false)
     private LocalDateTime assignedAt;
 
-    //Zimmetin iade edildiği tarih. Eğer null ise, henüz iade edilmemiştir.
     private LocalDateTime returnDate;
 
-    //Zimmet iade edildi mi? (true = iade edildi)
     @Builder.Default
     private Boolean isReturned = false;
 
-     //Zimmet kaydı aktif mi? (soft delete veya pasif durumu yönetmek için)
     @Builder.Default
     private Boolean active = true;
+
+    @Enumerated(EnumType.STRING)
+    private EEmbezzlementDuration duration;
+
+    @Enumerated(EnumType.STRING)
+    private EEmbezzlementType type;
 }
