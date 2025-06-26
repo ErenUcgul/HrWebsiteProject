@@ -2,10 +2,11 @@ package com.hrproject.hrwebsiteproject.service;
 
 import com.hrproject.hrwebsiteproject.exceptions.ErrorType;
 import com.hrproject.hrwebsiteproject.exceptions.HrWebsiteProjectException;
+import com.hrproject.hrwebsiteproject.mapper.MaterialMapper;
 import com.hrproject.hrwebsiteproject.model.dto.request.MaterialRequestDto;
+import com.hrproject.hrwebsiteproject.model.dto.request.MaterialUpdateStatusRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.MaterialResponseDto;
 import com.hrproject.hrwebsiteproject.model.entity.Material;
-import com.hrproject.hrwebsiteproject.repository.MaterialMapper;
 import com.hrproject.hrwebsiteproject.repository.MaterialRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,19 @@ public class MaterialService {
     public Material findById(Long id) {
         return materialRepository.findById(id)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.NOTFOUND_MATERIAL));
+    }
+
+    public void updateMaterialStatus(MaterialUpdateStatusRequestDto dto) {
+        Material material = materialRepository.findById(dto.materialId())
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.NOTFOUND_MATERIAL));
+
+        material.setStatus(dto.status());
+        materialRepository.save(material);
+    }
+
+    public void validateMaterialExists(Long materialId) {
+        if (!materialRepository.existsById(materialId)) {
+            throw new HrWebsiteProjectException(ErrorType.NOTFOUND_MATERIAL);
+        }
     }
 }

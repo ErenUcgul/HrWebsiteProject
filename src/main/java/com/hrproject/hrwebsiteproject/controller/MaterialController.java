@@ -2,6 +2,7 @@ package com.hrproject.hrwebsiteproject.controller;
 
 import com.hrproject.hrwebsiteproject.constant.EndPoints;
 import com.hrproject.hrwebsiteproject.model.dto.request.MaterialRequestDto;
+import com.hrproject.hrwebsiteproject.model.dto.request.MaterialUpdateStatusRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
 import com.hrproject.hrwebsiteproject.model.dto.response.MaterialResponseDto;
 import com.hrproject.hrwebsiteproject.service.MaterialService;
@@ -39,6 +40,18 @@ public class MaterialController {
                 .success(true)
                 .message("Materyal listesi başarıyla getirildi.")
                 .data(materials)
+                .build());
+    }
+
+    @PutMapping(EndPoints.UPDATE_MATERIAL_STATUS)
+    public ResponseEntity<BaseResponse<Boolean>> updateMaterialStatus(
+            @RequestBody @Valid MaterialUpdateStatusRequestDto dto) {
+        materialService.updateMaterialStatus(dto);
+        return ResponseEntity.ok(BaseResponse.<Boolean>builder()
+                .code(200)
+                .success(true)
+                .message("Materyal durumu başarıyla güncellendi.")
+                .data(true)
                 .build());
     }
 }

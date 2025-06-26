@@ -142,6 +142,9 @@ EndPoints {
     public static final String MATERIAL = ROOT + "/material";
     public static final String CREATE_MATERIAL = "/create";
     public static final String LIST_MATERIAL = "/list";
+    //------------------
+    public static final String UPDATE_MATERIAL_STATUS = "/update-status";
+
 
     //Company Review Upload API Controller Method  Endpoints
     public static final String CREATE_COMPANY_REVIEW = "/create-company-review";

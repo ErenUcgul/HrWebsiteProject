@@ -2,6 +2,8 @@ package com.hrproject.hrwebsiteproject.util;
 
 import com.hrproject.hrwebsiteproject.model.dto.request.MailSenderRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.WelcomeMailRequestDto;
+import com.hrproject.hrwebsiteproject.model.enums.EEmbezzlementDuration;
+import com.hrproject.hrwebsiteproject.model.enums.EEmbezzlementType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

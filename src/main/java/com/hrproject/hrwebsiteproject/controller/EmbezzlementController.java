@@ -110,6 +110,4 @@ public class EmbezzlementController {
                 .data(true)
                 .build());
     }
-
 }
-
