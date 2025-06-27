@@ -24,5 +24,6 @@ public interface CompanyReviewMapper {
     @Mapping(source = "review.content", target = "reviewContent")
     @Mapping(source = "review.reviewStatus", target = "reviewStatus")
     @Mapping(source = "review.rejectionReason", target = "rejectionReason")
+    @Mapping(source ="review.avatar",target = "avatar")
     CompanyReviewResponseDto toDto(CompanyReview review, Company company, User user);
 }

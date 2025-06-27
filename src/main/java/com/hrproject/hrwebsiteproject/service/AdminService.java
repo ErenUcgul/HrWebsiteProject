@@ -6,6 +6,7 @@ import com.hrproject.hrwebsiteproject.model.dto.request.WelcomeMailRequestDto;
 import com.hrproject.hrwebsiteproject.model.entity.Company;
 import com.hrproject.hrwebsiteproject.model.entity.User;
 import com.hrproject.hrwebsiteproject.model.enums.ECompanyState;
+import com.hrproject.hrwebsiteproject.model.enums.EUserRole;
 import com.hrproject.hrwebsiteproject.model.enums.EUserState;
 import com.hrproject.hrwebsiteproject.util.MailSenderService;
 import lombok.RequiredArgsConstructor;
@@ -18,25 +19,32 @@ public class AdminService {
     private final CompanyService companyService;
     private final MailSenderService mailSenderService;
 
-    public void approveUserAndCompany(Long userId) {
+    public void approveUserAndCompany(Long userId, Long performedByUserId) {
+        // ROL KONTROLÜ
+        User performer = userService.findById(performedByUserId)
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
+
+        if (performer.getUserRole() != EUserRole.ADMIN && performer.getUserRole() != EUserRole.SUPER_ADMIN) {
+            throw new HrWebsiteProjectException(ErrorType.UNAUTHORIZED_REQUEST);
+        }
+
         // Kullanıcı bulunur
         User user = userService.findById(userId)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
 
-        // Kullanıcının durumu kontrol edilir,ACTIVE ise onaylanamaz.
+        // Kullanıcı durumu kontrol edilir
         if (user.getState() == EUserState.ACTIVE) {
             throw new HrWebsiteProjectException(ErrorType.USER_ALREADY_ACTIVE);
         }
-        // Kullanıcının durumu kontrol edilir,REJECTED ve INREVIEW ise onaylanabilir.
         if (user.getState() == EUserState.PENDING) {
             throw new HrWebsiteProjectException(ErrorType.USER_STATE_IS_PENDING);
         }
 
-        // Kullanıcının şirketi bulunur
+        // Şirket bulunur
         Company company = companyService.findByUserId(user.getId())
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND));
 
-        // Şirketin durumu kontrol edilir,REJECTED ve INREVIEW ise onaylanabilir
+        // Şirket durumu kontrol edilir
         if (company.getState() == ECompanyState.ACTIVE) {
             throw new HrWebsiteProjectException(ErrorType.COMPANY_ALREADY_ACTIVE);
         }
@@ -44,24 +52,25 @@ public class AdminService {
             throw new HrWebsiteProjectException(ErrorType.COMPANY_STATE_IS_PENDING);
         }
 
-        // Hem kullanıcı hem şirket aktif yapılır
+        // Onayla
         user.setState(EUserState.ACTIVE);
         company.setState(ECompanyState.ACTIVE);
 
         userService.save(user);
         companyService.save(company);
 
+        // Hoşgeldin maili gönder
         String subject = "HrWebsiteProject'e Hoşgeldiniz!";
         String message = String.format(
                 "Merhaba %s %s,\n\n" +
                         "HrWebsiteProject ailesine katıldığınız için teşekkür ederiz! Hesabınız ve şirketiniz başarılı bir şekilde aktif edilmiştir.\n" +
                         "Artık tüm özelliklerimizden faydalanabilirsiniz.\n\n" +
                         "Başarılar dileriz,\n" +
-                        "HrWebsiteProject Ekibi (Başak \uD83C\uDF1F ,Anıl \uD83D\uDC27 ,Mert \uD83E\uDD81 ,Eren \uD83D\uDE4A)",
+                        "HrWebsiteProject Ekibi (Başak 🌟 ,Anıl 🐧 ,Mert 🦁 ,Eren 🙊)",
                 user.getFirstName(),
                 user.getLastName()
         );
-        //TODO:Membership bilgisi de verilebilir.
+
         mailSenderService.sendInformationMail(new WelcomeMailRequestDto(
                 user.getEmail(),
                 user.getFirstName(),

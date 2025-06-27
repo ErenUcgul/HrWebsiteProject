@@ -54,29 +54,58 @@ public class EmployeeExpenseService {
         employeeExpenseRepository.save(expense);
         return employeeExpenseMapper.toDto(expense);
     }
-    public EmployeeExpenseResponseDto updateExpense(Long expenseId, EmployeeExpenseRequestDto dto, Long employeeId) {
-        EmployeeExpense expense = employeeExpenseRepository.findById(expenseId)
-                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.EXPENSE_NOT_FOUND));
+//    public EmployeeExpenseResponseDto updateExpense(Long expenseId, EmployeeExpenseRequestDto dto, Long employeeId) {
+//        EmployeeExpense expense = employeeExpenseRepository.findById(expenseId)
+//                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.EXPENSE_NOT_FOUND));
+//
+//        // Kullanıcı kendi harcamasını güncelleyebilir
+//        if (!expense.getEmployeeId().equals(employeeId)) {
+//            throw new HrWebsiteProjectException(ErrorType.ACCESS_DENIED);
+//        }
+//
+//        // Sadece PENDING durumdaki harcama güncellenebilir
+//        if (!expense.getStatus().equals(EExpenseStatus.PENDING)) {
+//            throw new HrWebsiteProjectException(ErrorType.EXPENSE_ALREADY_PROCESSED);
+//        }
+//
+//        // Güncelleme
+//        expense.setAmount(dto.amount());
+//        expense.setDescription(dto.description());
+//        expense.setExpenseDate(dto.expenseDate());
+//
+//        employeeExpenseRepository.save(expense);
+//
+//        return employeeExpenseMapper.toDto(expense);
+//    }
+public EmployeeExpenseResponseDto updateExpense(Long expenseId, EmployeeExpenseRequestDto dto, Long employeeId) {
+    EmployeeExpense expense = employeeExpenseRepository.findById(expenseId)
+            .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.EXPENSE_NOT_FOUND));
 
-        // Kullanıcı kendi harcamasını güncelleyebilir
-        if (!expense.getEmployeeId().equals(employeeId)) {
-            throw new HrWebsiteProjectException(ErrorType.ACCESS_DENIED);
-        }
-
-        // Sadece PENDING durumdaki harcama güncellenebilir
-        if (!expense.getStatus().equals(EExpenseStatus.PENDING)) {
-            throw new HrWebsiteProjectException(ErrorType.EXPENSE_ALREADY_PROCESSED);
-        }
-
-        // Güncelleme
-        expense.setAmount(dto.amount());
-        expense.setDescription(dto.description());
-        expense.setExpenseDate(dto.expenseDate());
-
-        employeeExpenseRepository.save(expense);
-
-        return employeeExpenseMapper.toDto(expense);
+    // Kullanıcı sadece kendi harcamasını güncelleyebilir
+    if (!expense.getEmployeeId().equals(employeeId)) {
+        throw new HrWebsiteProjectException(ErrorType.ACCESS_DENIED);
     }
+
+    // Sadece PENDING veya REJECTED durumundaki harcama güncellenebilir
+    if (!(expense.getStatus().equals(EExpenseStatus.PENDING) || expense.getStatus().equals(EExpenseStatus.REJECTED))) {
+        throw new HrWebsiteProjectException(ErrorType.EXPENSE_ALREADY_PROCESSED);
+    }
+
+    // Güncelleme
+    expense.setAmount(dto.amount());
+    expense.setDescription(dto.description());
+    expense.setExpenseDate(dto.expenseDate());
+
+    // REJECTED bir harcama güncellendiğinde tekrar değerlendirilmesi için durumu yeniden PENDING yapılabilir
+    if (expense.getStatus().equals(EExpenseStatus.REJECTED)) {
+        expense.setStatus(EExpenseStatus.PENDING);
+        expense.setRejectionReason(null); // Eski red sebebi temizlenir
+    }
+
+    employeeExpenseRepository.save(expense);
+
+    return employeeExpenseMapper.toDto(expense);
+}
     public void deleteExpense(Long expenseId, Long employeeId) {
         EmployeeExpense expense = employeeExpenseRepository.findById(expenseId)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.EXPENSE_NOT_FOUND));
@@ -108,8 +137,10 @@ public class EmployeeExpenseService {
     public List<EmployeeExpense> getPendingExpenses(Long employeeId) {
         return getExpensesByStatus(employeeId, EExpenseStatus.PENDING);
     }
-    public List<EmployeeExpense> getAllExpensesByCompanyId(Long companyId) {
-        return employeeExpenseRepository.findAllByCompanyId(companyId);
-    }
 
+    public List<EmployeeExpenseResponseDto> getAllExpenseDtosByCompanyId(Long companyId) {
+        return employeeExpenseRepository.findAllByCompanyId(companyId).stream()
+                .map(employeeExpenseMapper::toDto)
+                .toList();
+    }
 }

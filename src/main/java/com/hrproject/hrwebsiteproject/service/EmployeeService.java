@@ -18,6 +18,7 @@ import com.hrproject.hrwebsiteproject.model.enums.Egender;
 import com.hrproject.hrwebsiteproject.repository.EmployeeRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ public class EmployeeService {
     private final EmployeeMapper employeeMapper;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public void createEmployee(EmployeeCreateRequestDto dto, Long companyId) {
         // 1. TC Kimlik numarası sistemde var mı?
@@ -73,6 +75,7 @@ public class EmployeeService {
                 .gender(dto.getGender())
                 .userRole(dto.getUserRole())
                 .state(EUserState.ACTIVE)
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .build();
         user = userService.save(user);
 

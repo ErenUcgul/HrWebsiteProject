@@ -59,7 +59,7 @@ public class EmployeeExpenseController {
         return ResponseEntity.ok(BaseResponse.<EmployeeExpenseResponseDto>builder()
                 .code(200)
                 .success(true)
-                .message(approved ? "Harcama onaylandı." : "Harcama reddedildi.")
+                .message(approved ? "Harcama onaylandı,maaşa eklendi" : "Harcama reddedildi.")
                 .data(response)
                 .build());
     }
@@ -94,23 +94,49 @@ public class EmployeeExpenseController {
     }
 
     @GetMapping(EndPoints.APPROVED_EXPENSES)
-    public ResponseEntity<List<EmployeeExpense>> getApproved(@RequestParam Long employeeId) {
-        return ResponseEntity.ok(expenseService.getApprovedExpenses(employeeId));
+    public ResponseEntity<BaseResponse<List<EmployeeExpense>>> getApproved(@RequestParam Long employeeId) {
+        List<EmployeeExpense> approvedExpenses = expenseService.getApprovedExpenses(employeeId);
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpense>>builder()
+                .code(200)
+                .success(true)
+                .message("Onaylanan harcamalar listelendi.")
+                .data(approvedExpenses)
+                .build());
     }
 
     @GetMapping(EndPoints.REJECTED_EXPENSES)
-    public ResponseEntity<List<EmployeeExpense>> getRejected(@RequestParam Long employeeId) {
-        return ResponseEntity.ok(expenseService.getRejectedExpenses(employeeId));
+    public ResponseEntity<BaseResponse<List<EmployeeExpense>>> getRejected(@RequestParam Long employeeId) {
+        List<EmployeeExpense> rejectedExpenses = expenseService.getRejectedExpenses(employeeId);
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpense>>builder()
+                .code(200)
+                .success(true)
+                .message("Reddedilen harcamalar listelendi.")
+                .data(rejectedExpenses)
+                .build());
     }
 
     @GetMapping(EndPoints.PENDING_EXPENSES)
-    public ResponseEntity<List<EmployeeExpense>> getPending(@RequestParam Long employeeId) {
-        return ResponseEntity.ok(expenseService.getPendingExpenses(employeeId));
+    public ResponseEntity<BaseResponse<List<EmployeeExpense>>> getPending(@RequestParam Long employeeId) {
+        List<EmployeeExpense> pendingExpenses = expenseService.getPendingExpenses(employeeId);
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpense>>builder()
+                .code(200)
+                .success(true)
+                .message("Beklemede olan harcamalar listelendi.")
+                .data(pendingExpenses)
+                .build());
     }
-    @GetMapping(EndPoints.LIST_ALL_EXPENSES)
-    public ResponseEntity<List<EmployeeExpense>> getAllExpensesByCompany(@RequestParam Long companyId) {
-        return ResponseEntity.ok(expenseService.getAllExpensesByCompanyId(companyId));
-    }
+
+@GetMapping(EndPoints.LIST_ALL_EXPENSES)
+public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getAllExpensesByCompany(@RequestParam Long companyId) {
+    List<EmployeeExpenseResponseDto> allExpenses = expenseService.getAllExpenseDtosByCompanyId(companyId);
+    return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
+            .code(200)
+            .success(true)
+            .message("Şirkete ait tüm harcamalar başarıyla listelendi.")
+            .data(allExpenses)
+            .build());
+}
+
     /*
     token
     @PostMapping("/create")

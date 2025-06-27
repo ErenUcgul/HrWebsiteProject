@@ -31,6 +31,13 @@ public class EmployeeCreateRequestDto {
     @Email
     private String email;
     private String avatar;
+    @NotBlank
+    @Pattern(regexp = "^.*(?=.{8,64})(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=*.]).*$",
+            message = "Şifre en az 8 karakter, en fazla 64 karakter, 1 Büyük harf 1 " +
+                    "Küçük harf, 1 Rakam ve 1 Özel karakter olmalıdır.")
+    String password;
+    @NotBlank(message = "Lütfen şifrenizi tekrar giriniz.")
+    String rePassword;
 
     @NotNull(message = "Cinsiyet boş olamaz.")
     private Egender gender;

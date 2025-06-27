@@ -8,6 +8,7 @@ public record CompanyReviewResponseDto(
         String managerFullName,
         String reviewContent,
         EReviewStatus reviewStatus,
-        String rejectionReason
+        String rejectionReason,
+        String avatar
 ) {
 }

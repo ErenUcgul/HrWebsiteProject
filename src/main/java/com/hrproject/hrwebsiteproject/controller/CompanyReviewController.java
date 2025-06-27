@@ -8,6 +8,10 @@ import com.hrproject.hrwebsiteproject.service.CompanyReviewService;
 import com.hrproject.hrwebsiteproject.util.JwtManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,13 +60,28 @@ public class CompanyReviewController {
                 .build());
     }
 
+    //    @GetMapping(EndPoints.LIST_ALL_COMPANY_REVIEWS)
+//    public ResponseEntity<BaseResponse<List<CompanyReviewResponseDto>>> listAllReviews() {
+//        return ResponseEntity.ok(BaseResponse.<List<CompanyReviewResponseDto>>builder()
+//                .code(200)
+//                .success(true)
+//                .message("Tüm yorumlar listelendi.")
+//                .data(reviewService.listAllReviews())
+//                .build());
+//    }
     @GetMapping(EndPoints.LIST_ALL_COMPANY_REVIEWS)
-    public ResponseEntity<BaseResponse<List<CompanyReviewResponseDto>>> listAllReviews() {
-        return ResponseEntity.ok(BaseResponse.<List<CompanyReviewResponseDto>>builder()
+    public ResponseEntity<BaseResponse<Page<CompanyReviewResponseDto>>> listAllReviews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createAt").descending());
+        Page<CompanyReviewResponseDto> pagedReviews = reviewService.listAllReviews(pageable);
+
+        return ResponseEntity.ok(BaseResponse.<Page<CompanyReviewResponseDto>>builder()
                 .code(200)
                 .success(true)
-                .message("Tüm yorumlar listelendi.")
-                .data(reviewService.listAllReviews())
+                .message("Yorumlar sayfalandırılarak listelendi.")
+                .data(pagedReviews)
                 .build());
     }
 

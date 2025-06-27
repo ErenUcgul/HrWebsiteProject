@@ -59,27 +59,27 @@ public class CompanyDataInitializer {
                 ECompanyType.HEALTHCARE
         );
 
-        RegisterRequestDto company3 = new RegisterRequestDto(
-                "Mehmet",
-                "Demir",
-                "SecurePass9#",
-                "SecurePass9#",
-                "mert.sari@bilgeadamboost.com",
-                "05559876543",
-                null,
-                Egender.MALE,
-                "BilgeAdamBoo",
-                "İzmir, Türkiye",
-                ERegion.TURKEY,
-                "02321239876",
-                "info@constructpro.com",
-                null,
-                ECompanyType.CONSTRUCTION
-        );
+//        RegisterRequestDto company3 = new RegisterRequestDto(
+//                "Mehmet",
+//                "Demir",
+//                "SecurePass9#",
+//                "SecurePass9#",
+//                "mert.sari@bilgeadamboost.com",
+//                "05559876543",
+//                null,
+//                Egender.MALE,
+//                "BilgeAdamBoo",
+//                "İzmir, Türkiye",
+//                ERegion.TURKEY,
+//                "02321239876",
+//                "info@constructpro.com",
+//                null,
+//                ECompanyType.CONSTRUCTION
+//        );
 
         registerAndApprove(company1);
         registerAndApprove(company2);
-        registerAndApprove(company3);
+//        registerAndApprove(company3);
 
     }
 

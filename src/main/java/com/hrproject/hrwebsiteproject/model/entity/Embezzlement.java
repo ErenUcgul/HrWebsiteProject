@@ -20,6 +20,7 @@ public class Embezzlement {
 
     private Long materialId;
 
+    @Column(nullable = true) //true olmadan iadede nulla çekemiyoruz
     private Long userId;
 
     private Long managerId;

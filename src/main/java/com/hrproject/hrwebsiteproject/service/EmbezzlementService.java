@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,8 @@ public class EmbezzlementService {
     private final EmbezzlementMapper embezzlementMapper;
     private final JwtManager jwtManager;
     private final MaterialService materialService;
+    private final CompanyService companyService;
+    private final UserService userService;
 
     public void addEmbezzlement(AddEmbezzlementRequestDto dto) {
         Long managerId = jwtManager.getUserIdFromToken(dto.token());
@@ -37,7 +41,7 @@ public class EmbezzlementService {
                 .existsByMaterialIdAndIsReturnedFalseAndActiveTrue(dto.materialId());
 
         if (alreadyAssigned) {
-            throw new HrWebsiteProjectException(ErrorType.MATERIAL_ALREADY_ASSIGNED);
+            throw new HrWebsiteProjectException(ErrorType.MATERIAL_ALREADY_ADDED);
         }
 
         Embezzlement embezzlement = Embezzlement.builder()
@@ -50,10 +54,19 @@ public class EmbezzlementService {
         embezzlementRepository.save(embezzlement);
     }
 
-    public List<EmbezzlementResponseDto> getEmbezzlementList(String token) {
+    public List<EmbezzlementResponseDto> getActiveEmbezzlementList(String token) {
         Long managerId = jwtManager.getUserIdFromToken(token);
 
         List<Embezzlement> list = embezzlementRepository.findAllByManagerIdAndActiveTrue(managerId);
+        return list.stream()
+                .map(embezzlementMapper::toResponseDto)
+                .toList();
+    }
+
+    public List<EmbezzlementResponseDto> getPassiveEmbezzlementList(String token) {
+        Long managerId = jwtManager.getUserIdFromToken(token);
+
+        List<Embezzlement> list = embezzlementRepository.findAllByManagerIdAndActiveFalse(managerId);
         return list.stream()
                 .map(embezzlementMapper::toResponseDto)
                 .toList();
@@ -96,6 +109,17 @@ public class EmbezzlementService {
         embezzlementRepository.saveAll(embezzlements);
     }
 
+    public void deleteEmbezzlementById(Long embezzlementId, String token) {
+        Long managerId = jwtManager.getUserIdFromToken(token);
+
+        Embezzlement embezzlement = embezzlementRepository.findByIdAndActiveTrue(embezzlementId)
+                .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.NOTFOUND_EMBEZZLEMENT));
+
+        embezzlement.setActive(false);
+        embezzlementRepository.save(embezzlement);
+    }
+
+
     public void returnEmbezzlement(Long embezzlementId, Long userId) {
         Embezzlement embezzlement = embezzlementRepository.findById(embezzlementId)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.NOTFOUND_EMBEZZLEMENT));
@@ -109,9 +133,30 @@ public class EmbezzlementService {
         }
 
         embezzlement.setIsReturned(true);               // Zimmet iade edildi
-        embezzlement.setActive(false);                  // Artık aktif değil
+//        embezzlement.setActive(false);                  // Artık aktif değil
         embezzlement.setReturnDate(LocalDateTime.now());
+        embezzlement.setUserId(null);
 
         embezzlementRepository.save(embezzlement);
     }
+//    public List<EmbezzlementResponseDto> getAllEmbezzlementsByCompany(String token) {
+//        Long managerId = jwtManager.getUserIdFromToken(token);
+//        Long companyId = companyService.getCompanyIdByUserId(managerId);
+//
+//        List<Embezzlement> embezzlements = embezzlementRepository.findAllByUserIdIn(Collections.singletonList(companyId));
+//
+//        return embezzlements.stream()
+//                .map(embezzlementMapper::toResponseDto)
+//                .collect(Collectors.toList());
+//    }
+
+    public List<EmbezzlementResponseDto> getAllEmbezzlementListByManager(String token) {
+        Long managerId = jwtManager.getUserIdFromToken(token);
+
+        List<Embezzlement> list = embezzlementRepository.findAllByManagerId(managerId);
+        return list.stream()
+                .map(embezzlementMapper::toResponseDto)
+                .toList();
+    }
 }
+
