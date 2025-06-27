@@ -36,6 +36,7 @@ EndPoints {
     public static final String LOGOUT = "/logout";
     public static final String REFRESH_ACCESS_TOKEN = "/refresh-access-token";
     public static final String EMPLOYEE_LOGIN = "/employee-login";
+    public static final String ADMIN_LOGIN = "/admin-login";
 
     //Admin API Controller Method Endpoints
     public static final String APPROVE_USER_AND_COMPANY = "/approve-user-and-company";
@@ -127,6 +128,7 @@ EndPoints {
     public static final String DELETE_SHIFT_ASSIGN = "/delete-shift-assign";
     public static final String GET_SHIFT_BY_EMPLOYEE = "/get-shift-by-employee";
     public static final String GET_EMPLOYEE_BY_SHIFT = "/get-employee-by-shift";
+    public static final String GET_MY_SHIFTS = "/get-my-shifts";
 
     // Embezzlement API Controller Root Endpoint
     public static final String EMBEZZLEMENT = ROOT + "/embezzlement";

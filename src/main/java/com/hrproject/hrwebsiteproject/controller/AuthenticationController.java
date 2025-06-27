@@ -9,6 +9,7 @@ import com.hrproject.hrwebsiteproject.model.dto.request.RegisterRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.ResetPasswordRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
 import com.hrproject.hrwebsiteproject.model.dto.response.LoginResponseDto;
+import com.hrproject.hrwebsiteproject.service.AdminService;
 import com.hrproject.hrwebsiteproject.service.EmployeeAuthService;
 import com.hrproject.hrwebsiteproject.service.RegistrationService;
 import com.hrproject.hrwebsiteproject.service.UserService;
@@ -25,6 +26,7 @@ public class AuthenticationController {
     private final UserService userService;
     private final RegistrationService registrationService;
     private final EmployeeAuthService employeeAuthService;
+    private final AdminService adminService;
 
     @PostMapping(EndPoints.REGISTER)
     public ResponseEntity<BaseResponse<Boolean>> registerWithCompany(@RequestBody @Valid RegisterRequestDto dto) {
@@ -111,6 +113,18 @@ public class AuthenticationController {
                 .data(tokens)
                 .success(true)
                 .message("Personel girişi başarılı.")
+                .build());
+    }
+
+    @PostMapping(EndPoints.ADMIN_LOGIN)
+    public ResponseEntity<BaseResponse<LoginResponseDto>> adminLogin(@RequestBody @Valid LoginRequestDto dto) {
+        LoginResponseDto tokens = adminService.adminLogin(dto.email(), dto.password());
+
+        return ResponseEntity.ok(BaseResponse.<LoginResponseDto>builder()
+                .code(200)
+                .data(tokens)
+                .success(true)
+                .message("Admin girişi başarılı.")
                 .build());
     }
 

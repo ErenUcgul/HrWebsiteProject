@@ -3,6 +3,7 @@ import com.hrproject.hrwebsiteproject.exceptions.ErrorType;
 import com.hrproject.hrwebsiteproject.exceptions.HrWebsiteProjectException;
 import com.hrproject.hrwebsiteproject.model.dto.request.AssignShiftRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.EmployeeShiftResponseDto;
+import com.hrproject.hrwebsiteproject.model.dto.response.MyShiftsResponseDto;
 import com.hrproject.hrwebsiteproject.model.entity.Employee;
 import com.hrproject.hrwebsiteproject.model.entity.Shift;
 import com.hrproject.hrwebsiteproject.model.entity.ShiftTracking;
@@ -153,4 +154,24 @@ public class ShiftTrackingService {
                     );
                 }).toList();
     }
+    public List<MyShiftsResponseDto> getMyShiftsList(Long userId) {
+        List<ShiftTracking> trackings = shiftTrackingRepository.findAllByUserId(userId);
+
+        if (trackings.isEmpty()) {
+            throw new HrWebsiteProjectException(ErrorType.SHIFT_ASSIGNMENT_NOT_FOUND);
+        }
+        return trackings.stream().map(tracking -> {
+            Shift shift = shiftRepository.findById(tracking.getShiftId())
+                    .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.SHIFT_NOT_FOUND));
+            return new MyShiftsResponseDto(
+                    shift.getId(),
+                    shift.getShiftName(),
+                    shift.getBeginHour(),
+                    shift.getEndHour(),
+                    tracking.getBeginDate(),
+                    tracking.getEndDate()
+            );
+        }).toList();
+    }
+
 }
