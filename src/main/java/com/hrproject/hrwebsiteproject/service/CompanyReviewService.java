@@ -12,6 +12,8 @@ import com.hrproject.hrwebsiteproject.model.enums.EReviewStatus;
 import com.hrproject.hrwebsiteproject.model.enums.EUserRole;
 import com.hrproject.hrwebsiteproject.repository.CompanyReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +46,7 @@ public class CompanyReviewService {
         review.setCompanyId(company.getId());
         review.setManagerUserId(userId);
         review.setReviewStatus(EReviewStatus.PENDING); // artık enum ile durum belirleniyor
+        review.setAvatar(dto.avatar());
         review.setRejectionReason(null);
 
         companyReviewRepository.save(review);
@@ -123,16 +126,28 @@ public class CompanyReviewService {
 
         return companyReviewMapper.toDto(existingReview, company, user);
     }
-    public List<CompanyReviewResponseDto> listAllReviews() {
-        List<CompanyReview> reviews = companyReviewRepository.findAll();
-        return reviews.stream()
-                .map(review -> {
-                    Company company = companyService.findById(review.getCompanyId())
-                            .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND));
-                    User user = userService.findById(review.getManagerUserId())
-                            .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
-                    return companyReviewMapper.toDto(review, company, user);
-                })
-                .toList();
+
+    //    public List<CompanyReviewResponseDto> listAllReviews() {
+//        List<CompanyReview> reviews = companyReviewRepository.findAll();
+//        return reviews.stream()
+//                .map(review -> {
+//                    Company company = companyService.findById(review.getCompanyId())
+//                            .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND));
+//                    User user = userService.findById(review.getManagerUserId())
+//                            .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
+//                    return companyReviewMapper.toDto(review, company, user);
+//                })
+//                .toList();
+//    }
+    public Page<CompanyReviewResponseDto> listAllReviews(Pageable pageable) {
+        Page<CompanyReview> reviews = companyReviewRepository.findAll(pageable);
+
+        return reviews.map(review -> {
+            Company company = companyService.findById(review.getCompanyId())
+                    .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.COMPANY_NOT_FOUND));
+            User user = userService.findById(review.getManagerUserId())
+                    .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.USER_NOT_FOUND));
+            return companyReviewMapper.toDto(review, company, user);
+        });
     }
 }

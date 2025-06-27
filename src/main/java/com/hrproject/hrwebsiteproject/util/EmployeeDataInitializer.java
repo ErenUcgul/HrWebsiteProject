@@ -31,7 +31,7 @@ public class EmployeeDataInitializer {
                 .firstName("Eren")
                 .lastName("Üçgül")
                 .phone("05559887768")
-                .email("eren@bilgeadamboost.com")
+                .email("mert.sari@bilgeadamboost.com")
                 .avatar(null)
                 .gender(Egender.MALE)
                 .userRole(EUserRole.EMPLOYEE)
@@ -44,6 +44,7 @@ public class EmployeeDataInitializer {
                 .salary(12000.0)
                 .employmentStatus(EEmploymentStatus.ACTIVE)
                 .socialSecurityNumber("SGK123456789")
+                .password("Password123!")
                 .build();
 
         employeeService.createEmployee(employee1, companyId);
@@ -65,6 +66,7 @@ public class EmployeeDataInitializer {
                 .salary(12000.0)
                 .employmentStatus(EEmploymentStatus.ACTIVE)
                 .socialSecurityNumber("SGK123456790")
+                .password("Password123!")
                 .build();
 
         employeeService.createEmployee(employee2, companyId);

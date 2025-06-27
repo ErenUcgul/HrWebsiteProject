@@ -39,16 +39,29 @@ public class EmbezzlementController {
                 .build());
     }
 
-    @GetMapping(EndPoints.GET_EMBEZZLEMENT_LIST)
+    @GetMapping(EndPoints.GET_ACTIVE_EMBEZZLEMENT_LIST)
     public ResponseEntity<BaseResponse<List<EmbezzlementResponseDto>>> getEmbezzlementList(
             @RequestHeader String token) {
 
-        List<EmbezzlementResponseDto> list = embezzlementService.getEmbezzlementList(token);
+        List<EmbezzlementResponseDto> list = embezzlementService.getActiveEmbezzlementList(token);
 
         return ResponseEntity.ok(BaseResponse.<List<EmbezzlementResponseDto>>builder()
                 .code(200)
                 .success(true)
-                .message("Zimmet listesi başarıyla getirildi.")
+                .message("Aktif zimmet listesi başarıyla getirildi.")
+                .data(list)
+                .build());
+    }
+    @GetMapping(EndPoints.GET_PASSIVE_EMBEZZLEMENT_LIST)
+    public ResponseEntity<BaseResponse<List<EmbezzlementResponseDto>>> getPassiveEmbezzlementList(
+            @RequestHeader String token) {
+
+        List<EmbezzlementResponseDto> list = embezzlementService.getPassiveEmbezzlementList(token);
+
+        return ResponseEntity.ok(BaseResponse.<List<EmbezzlementResponseDto>>builder()
+                .code(200)
+                .success(true)
+                .message("Pasif zimmet listesi başarıyla getirildi.")
                 .data(list)
                 .build());
     }
@@ -94,6 +107,20 @@ public class EmbezzlementController {
                 .data(true)
                 .build());
     }
+    @PutMapping(EndPoints.DELETE_EMBEZZLEMENT_BY_ID)
+    public ResponseEntity<BaseResponse<String>> deleteEmbezzlementById(
+            @RequestParam Long embezzlementId,
+            @RequestParam String token) {
+
+        embezzlementService.deleteEmbezzlementById(embezzlementId, token);
+
+        return ResponseEntity.ok(BaseResponse.<String>builder()
+                .success(true)
+                .code(200)
+                .message("Embezzlement deleted by ID.")
+                .data("Embezzlement ID: " + embezzlementId + " silindi.")
+                .build());
+    }
 
     @PutMapping(EndPoints.RETURN_EMBEZZLEMENT)
     public ResponseEntity<BaseResponse<Boolean>> returnEmbezzlement(
@@ -108,6 +135,19 @@ public class EmbezzlementController {
                 .message("Zimmet başarıyla iade edildi.")
                 .code(200)
                 .data(true)
+                .build());
+    }
+    @GetMapping(EndPoints.GET_ALL_EMBEZZLEMENT_LIST_BY_COMPANY)
+    public ResponseEntity<BaseResponse<List<EmbezzlementResponseDto>>> getPersonalEmbezzlementList(
+            @RequestHeader String token) {
+
+        List<EmbezzlementResponseDto> list = embezzlementService.getAllEmbezzlementListByManager(token);
+
+        return ResponseEntity.ok(BaseResponse.<List<EmbezzlementResponseDto>>builder()
+                .code(200)
+                .success(true)
+                .message("Tüm zimmetler başarıyla getirildi.")
+                .data(list)
                 .build());
     }
 }

@@ -3,12 +3,13 @@ package com.hrproject.hrwebsiteproject.controller;
 import com.hrproject.hrwebsiteproject.constant.EndPoints;
 import com.hrproject.hrwebsiteproject.exceptions.ErrorType;
 import com.hrproject.hrwebsiteproject.exceptions.HrWebsiteProjectException;
-import com.hrproject.hrwebsiteproject.model.dto.request.LoginRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.ActivationRequestDto;
+import com.hrproject.hrwebsiteproject.model.dto.request.LoginRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.RegisterRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.ResetPasswordRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
 import com.hrproject.hrwebsiteproject.model.dto.response.LoginResponseDto;
+import com.hrproject.hrwebsiteproject.service.EmployeeAuthService;
 import com.hrproject.hrwebsiteproject.service.RegistrationService;
 import com.hrproject.hrwebsiteproject.service.UserService;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final UserService userService;
     private final RegistrationService registrationService;
+    private final EmployeeAuthService employeeAuthService;
 
     @PostMapping(EndPoints.REGISTER)
     public ResponseEntity<BaseResponse<Boolean>> registerWithCompany(@RequestBody @Valid RegisterRequestDto dto) {
@@ -60,6 +62,7 @@ public class AuthenticationController {
                 .build());
     }
 
+
     @GetMapping(EndPoints.FORGOT_PASSWORD)
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
         registrationService.forgotPassword(email);
@@ -96,6 +99,18 @@ public class AuthenticationController {
                 .success(true)
                 .data(newAccessToken)
                 .message("Yeni access token üretildi.")
+                .build());
+    }
+
+    @PostMapping(EndPoints.EMPLOYEE_LOGIN)
+    public ResponseEntity<BaseResponse<LoginResponseDto>> employeeLogin(@RequestBody @Valid LoginRequestDto dto) {
+        LoginResponseDto tokens = employeeAuthService.employeeLogin(dto.email(), dto.password());
+
+        return ResponseEntity.ok(BaseResponse.<LoginResponseDto>builder()
+                .code(200)
+                .data(tokens)
+                .success(true)
+                .message("Personel girişi başarılı.")
                 .build());
     }
 

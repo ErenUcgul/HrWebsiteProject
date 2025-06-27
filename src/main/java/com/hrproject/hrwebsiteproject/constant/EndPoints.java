@@ -35,6 +35,7 @@ EndPoints {
     public static final String RESET_PASSWORD = "/reset-password";
     public static final String LOGOUT = "/logout";
     public static final String REFRESH_ACCESS_TOKEN = "/refresh-access-token";
+    public static final String EMPLOYEE_LOGIN = "/employee-login";
 
     //Admin API Controller Method Endpoints
     public static final String APPROVE_USER_AND_COMPANY = "/approve-user-and-company";
@@ -133,10 +134,13 @@ EndPoints {
 
     // Embezzlement API Controller Method Endpoints
     public static final String ADD_EMBEZZLEMENT = "/add";
-    public static final String GET_EMBEZZLEMENT_LIST = "/list";
+    public static final String GET_ACTIVE_EMBEZZLEMENT_LIST = "/get-active-embezzlement-list";
+    public static final String GET_PASSIVE_EMBEZZLEMENT_LIST = "/get-passive-embezzlement-list";
     public static final String ASSIGMENT_EMBEZZLEMENT = "/assign";
     public static final String GET_ALL_MY_EMBEZZLEMENT_LIST = "/my-list";
     public static final String DELETE_EMBEZZLEMENT_BY_USERID = "/delete-by-user";
+    public static final String DELETE_EMBEZZLEMENT_BY_ID = "/delete-by-embezzlement-id";
+    public static final String GET_ALL_EMBEZZLEMENT_LIST_BY_COMPANY = "/get-all-by-company";
 
     // Material API Controller Endpoint
     public static final String MATERIAL = ROOT + "/material";

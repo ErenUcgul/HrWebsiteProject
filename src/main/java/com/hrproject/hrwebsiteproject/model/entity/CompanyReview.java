@@ -29,5 +29,6 @@ public class CompanyReview extends BaseEntity {
     private EReviewStatus reviewStatus;
 
     private String rejectionReason;
+    private String avatar;
 
 }

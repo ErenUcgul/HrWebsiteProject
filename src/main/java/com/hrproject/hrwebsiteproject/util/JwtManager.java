@@ -13,11 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class JwtManager {
-    // 1. jwt token üretme
     @Value("${hrwebsite.jwt.secret-key}")
     private String secretKey;
     @Value("${hrwebsite.jwt.issuer}")
@@ -47,11 +45,7 @@ public class JwtManager {
                 .withClaim("role", role.name())
                 .sign(Algorithm.HMAC512(secretKey));
     }
-//    public String generateRefreshToken() {
-//        return UUID.randomUUID().toString(); // Rastgele bir token
-//    }
 
-    // 2. jwt token doğrulama
     public Optional<Long> validateToken(String token) {
         try {
             Algorithm algoritm = Algorithm.HMAC512(secretKey);
@@ -67,7 +61,7 @@ public class JwtManager {
             return Optional.empty();
         }
     }
-    //09.06
+
     public Long getUserIdFromToken(String token) {
         return validateToken(token)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.INVALID_TOKEN));

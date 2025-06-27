@@ -88,7 +88,10 @@ public enum ErrorType {
     UNAUTHORIZED_ACCESS(5008,"Bu zimmeti iade etme yetkiniz yok.",HttpStatus.UNAUTHORIZED ),
     EMBEZZLEMENT_ALREADY_RETURNED(5009,"Bu zimmet zaten iade edilmiş.",HttpStatus.BAD_REQUEST ),
     MATERIAL_ALREADY_ASSIGNED(5010,"Bu ürün zaten başka bir kişiye zimmetlenmiş.",HttpStatus.BAD_REQUEST ),
-    EMBEZZLEMENT_ALREADY_ASSIGNED(5011,"Bu zimmet zaten bir kullanıcıya atanmış ve iade edilmemiştir.",HttpStatus.BAD_REQUEST ),;
+    MATERIAL_ALREADY_ADDED(5014,"Bu ürün zaten eklenmiş..",HttpStatus.BAD_REQUEST ),
+    EMBEZZLEMENT_ALREADY_ASSIGNED(5011,"Bu zimmet zaten bir kullanıcıya atanmış ve iade edilmemiştir.",HttpStatus.BAD_REQUEST ),
+    UNAUTHORIZED_USER_ROLE(5012,"Kullanıcı rolünüzün giriş yetkisi yok." ,HttpStatus.UNAUTHORIZED ),
+    UNAUTHORIZED_REQUEST(5013,"Yetkisiz Giriş!" ,HttpStatus.UNAUTHORIZED ),;
 
     int code;
     String message;
