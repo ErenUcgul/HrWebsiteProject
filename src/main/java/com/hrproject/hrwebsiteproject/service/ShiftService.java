@@ -7,8 +7,10 @@ import com.hrproject.hrwebsiteproject.model.dto.request.ShiftUpdateRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.ShiftResponseDto;
 import com.hrproject.hrwebsiteproject.model.entity.Employee;
 import com.hrproject.hrwebsiteproject.model.entity.Shift;
+import com.hrproject.hrwebsiteproject.model.entity.ShiftTracking;
 import com.hrproject.hrwebsiteproject.model.entity.User;
 import com.hrproject.hrwebsiteproject.repository.ShiftRepository;
+import com.hrproject.hrwebsiteproject.repository.ShiftTrackingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class ShiftService {
     private final ShiftRepository shiftRepository;
     private final CompanyService companyService;
+    private final ShiftTrackingRepository shiftTrackingRepository;
 
     public Boolean createAndCheckShift(List<ShiftRequestDto> dtoList) {
         // Her DTO için süre hesaplanıp toplam kontrolü yapılır
@@ -75,13 +78,19 @@ public class ShiftService {
                 .toList();
     }
     public Boolean deleteShift(Long shiftId) {
+        // 1. Shift var mı?
         Shift shift = shiftRepository.findById(shiftId)
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.SHIFT_NOT_FOUND));
-
+        // 2. Shift bir çalışana atanmış mı?
+        List<ShiftTracking> assignments = shiftTrackingRepository.findAllByShiftId(shiftId);
+        if (!assignments.isEmpty()) {
+            throw new HrWebsiteProjectException(ErrorType.SHIFT_CANNOT_BE_DELETED_ASSIGNED);
+        }
+        // 3. Sil
         shiftRepository.delete(shift);
-
         return true;
     }
+
 
     public Boolean updateShift(Long shiftId, ShiftUpdateRequestDto dto) {
         Shift shift = shiftRepository.findById(shiftId)
@@ -132,5 +141,6 @@ public class ShiftService {
         if (e2 <= s2) e2 += 24 * 3600;
         return s1 < e2 && s2 < e1;
     }
+
 
 }

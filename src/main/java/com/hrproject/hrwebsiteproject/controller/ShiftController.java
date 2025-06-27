@@ -6,6 +6,7 @@ import com.hrproject.hrwebsiteproject.model.dto.request.ShiftRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.ShiftUpdateRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
 import com.hrproject.hrwebsiteproject.model.dto.response.EmployeeShiftResponseDto;
+import com.hrproject.hrwebsiteproject.model.dto.response.MyShiftsResponseDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.ShiftResponseDto;
 import com.hrproject.hrwebsiteproject.service.ShiftService;
 import com.hrproject.hrwebsiteproject.service.ShiftTrackingService;
@@ -120,6 +121,18 @@ public class ShiftController {
                 .code(200)
                 .message("Vardiyaya atanan personeller başarıyla getirildi.")
                 .data(response)
+                .build());
+    }
+    @GetMapping(EndPoints.GET_MY_SHIFTS)
+    public ResponseEntity<BaseResponse<List<MyShiftsResponseDto>>> getOwnShiftAssignments(
+            @RequestHeader String token) {
+        Long userId = jwtManager.getUserIdFromToken(token);
+        List<MyShiftsResponseDto> shifts = shiftTrackingService.getMyShiftsList(userId);
+        return ResponseEntity.ok(BaseResponse.<List<MyShiftsResponseDto>>builder()
+                .success(true)
+                .code(200)
+                .message("Kullanıcının vardiya listesi başarıyla getirildi.")
+                .data(shifts)
                 .build());
     }
 }

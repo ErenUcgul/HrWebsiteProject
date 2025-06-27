@@ -91,7 +91,8 @@ public enum ErrorType {
     MATERIAL_ALREADY_ADDED(5014,"Bu ürün zaten eklenmiş..",HttpStatus.BAD_REQUEST ),
     EMBEZZLEMENT_ALREADY_ASSIGNED(5011,"Bu zimmet zaten bir kullanıcıya atanmış ve iade edilmemiştir.",HttpStatus.BAD_REQUEST ),
     UNAUTHORIZED_USER_ROLE(5012,"Kullanıcı rolünüzün giriş yetkisi yok." ,HttpStatus.UNAUTHORIZED ),
-    UNAUTHORIZED_REQUEST(5013,"Yetkisiz Giriş!" ,HttpStatus.UNAUTHORIZED ),;
+    UNAUTHORIZED_REQUEST(5013,"Yetkisiz Giriş!" ,HttpStatus.UNAUTHORIZED ),
+    SHIFT_CANNOT_BE_DELETED_ASSIGNED(5014,"Bu vardiya bir çalışana atandığı için silinemez." ,HttpStatus.BAD_REQUEST ),;
 
     int code;
     String message;

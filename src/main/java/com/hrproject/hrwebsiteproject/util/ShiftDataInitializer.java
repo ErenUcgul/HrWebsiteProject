@@ -28,5 +28,6 @@ public class ShiftDataInitializer {
         shiftService.createAndCheckShift(company1Sfihts);
         shiftService.createAndCheckShift(company2Shifts);
     }
+
 }
 

@@ -107,7 +107,9 @@ public class HrWebsiteProjectSecurityConfig {
                                 "v1/dev/company-review/delete-company-review",
                                 "v1/dev/company-review/update-company-review",
                                 "v1/dev/company-review/list-all-company-reviews",
-                                "v1/dev/auth/employee-login"
+                                "v1/dev/auth/employee-login",
+                                "v1/dev/shift/shifts",
+                                "v1/dev/auth/admin-login"
                         ).permitAll()
 
                         .requestMatchers("/admin/**",
