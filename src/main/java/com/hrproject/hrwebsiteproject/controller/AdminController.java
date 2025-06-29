@@ -68,7 +68,7 @@ public class AdminController {
                 .build());
     }
 
-    //Admin dashboard
+
     @GetMapping(EndPoints.ADMIN_DASHBOARD)
     public ResponseEntity<BaseResponse<AdminDashboardResponse>> getAdminDashboard(
             @RequestHeader String token) {
@@ -100,6 +100,7 @@ public class AdminController {
                 .data(dto)
                 .build());
     }
+
 
     @PutMapping(EndPoints.REJECT_COMPANY)
     public ResponseEntity<BaseResponse<Boolean>> rejectUserAndCompany(@RequestParam Long companyId,

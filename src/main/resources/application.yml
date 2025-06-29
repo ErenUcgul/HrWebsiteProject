@@ -59,12 +59,3 @@ hrwebsite:
     password: Admin1234
 file:
   upload-dir: uploads/
-#logging:
-#  level:
-#    root: trace
-#    com.barisd.java17x.controller.UserController: trace
-#  file:
-#    name: java17Xdebug.log
-#  logback:
-#    rollingpolicy:
-#      max-file-size: 1MB

@@ -29,12 +29,15 @@ import java.util.List;
 public class SalaryPaymentController {
 
     private final SalaryPaymentService salaryPaymentService;
+    private final JwtManager jwtManager;
 
     @PostMapping(EndPoints.GENERATE_SALARY)
     public ResponseEntity<BaseResponse<SalaryPaymentResponseDto>> generateSalary(
+            @RequestHeader String token,
             @RequestParam Long employeeId,
-            @RequestParam Long companyId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth month) {
+
+        Long companyId = jwtManager.getCompanyIdFromToken(token);
 
         SalaryPaymentResponseDto dto = salaryPaymentService.createMonthlySalaryPayment(employeeId, companyId, month);
 

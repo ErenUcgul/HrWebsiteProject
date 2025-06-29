@@ -27,9 +27,11 @@ public class EmbezzlementController {
 
     @PostMapping(EndPoints.ADD_EMBEZZLEMENT)
     public ResponseEntity<BaseResponse<Boolean>> addEmbezzlement(
+            @RequestHeader String token,
             @RequestBody @Valid AddEmbezzlementRequestDto dto) {
 
-        embezzlementService.addEmbezzlement(dto);
+        Long companyId = jwtManager.getUserIdFromToken(token);
+        embezzlementService.addEmbezzlement(dto, companyId);
 
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
                 .code(200)
@@ -68,9 +70,11 @@ public class EmbezzlementController {
 
     @PutMapping(EndPoints.ASSIGMENT_EMBEZZLEMENT)
     public ResponseEntity<BaseResponse<Boolean>> assignEmbezzlement(
+            @RequestHeader String token,
             @RequestBody @Valid AssigmentEmbezzlementRequestDto dto) {
 
-        embezzlementService.assignEmbezzlement(dto);
+        Long managerId = jwtManager.getUserIdFromToken(token);
+        embezzlementService.assignEmbezzlement(dto, managerId);
 
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
                 .code(200)
@@ -96,9 +100,11 @@ public class EmbezzlementController {
 
     @PutMapping(EndPoints.DELETE_EMBEZZLEMENT_BY_USERID)
     public ResponseEntity<BaseResponse<Boolean>> deleteEmbezzlementByUser(
+            @RequestHeader String token,
             @RequestBody @Valid DeleteEmbezzlementRequestDto dto) {
 
-        embezzlementService.deleteEmbezzlementByUser(dto);
+        Long userId = jwtManager.getUserIdFromToken(token);
+        embezzlementService.deleteEmbezzlementByUser(dto, userId);
 
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
                 .code(200)
@@ -117,7 +123,7 @@ public class EmbezzlementController {
         return ResponseEntity.ok(BaseResponse.<String>builder()
                 .success(true)
                 .code(200)
-                .message("Embezzlement deleted by ID.")
+                .message("Zimmet silindi.")
                 .data("Embezzlement ID: " + embezzlementId + " silindi.")
                 .build());
     }

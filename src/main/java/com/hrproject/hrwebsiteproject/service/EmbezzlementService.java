@@ -30,13 +30,9 @@ public class EmbezzlementService {
     private final CompanyService companyService;
     private final UserService userService;
 
-    public void addEmbezzlement(AddEmbezzlementRequestDto dto) {
-        Long managerId = jwtManager.getUserIdFromToken(dto.token());
-
-        // Material var mı kontrolü
+    public void addEmbezzlement(AddEmbezzlementRequestDto dto, Long managerId) {
         materialService.validateMaterialExists(dto.materialId());
 
-        // Material zaten aktif zimmetlenmiş mi?
         boolean alreadyAssigned = embezzlementRepository
                 .existsByMaterialIdAndIsReturnedFalseAndActiveTrue(dto.materialId());
 
@@ -72,18 +68,16 @@ public class EmbezzlementService {
                 .toList();
     }
 
-    public void assignEmbezzlement(AssigmentEmbezzlementRequestDto dto) {
-        Long managerId = jwtManager.getUserIdFromToken(dto.token());
-
+    public void assignEmbezzlement(AssigmentEmbezzlementRequestDto dto, Long managerId) {
         Embezzlement embezzlement = embezzlementRepository.findById(dto.embezzlementId())
                 .orElseThrow(() -> new HrWebsiteProjectException(ErrorType.NOTFOUND_EMBEZZLEMENT));
 
-        // Eğer zaten atanmışsa (userId doluysa), tekrar atama yapma
         if (embezzlement.getUserId() != null) {
             throw new HrWebsiteProjectException(ErrorType.EMBEZZLEMENT_ALREADY_ASSIGNED);
         }
 
         embezzlement.setUserId(dto.userId());
+        embezzlement.setManagerId(managerId); // Eğer zimmet atamasında yöneticiyi de güncellemek istiyorsan.
         embezzlementRepository.save(embezzlement);
     }
 
@@ -96,9 +90,7 @@ public class EmbezzlementService {
                 .toList();
     }
 
-    public void deleteEmbezzlementByUser(DeleteEmbezzlementRequestDto dto) {
-        Long managerId = jwtManager.getUserIdFromToken(dto.token());
-
+    public void deleteEmbezzlementByUser(DeleteEmbezzlementRequestDto dto, Long managerId) {
         List<Embezzlement> embezzlements = embezzlementRepository.findAllByUserIdAndActiveTrue(dto.userId());
 
         if (embezzlements.isEmpty()) {

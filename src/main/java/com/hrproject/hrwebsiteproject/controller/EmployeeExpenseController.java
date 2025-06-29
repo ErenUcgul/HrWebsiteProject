@@ -1,11 +1,13 @@
 package com.hrproject.hrwebsiteproject.controller;
 
 import com.hrproject.hrwebsiteproject.constant.EndPoints;
+import com.hrproject.hrwebsiteproject.mapper.EmployeeExpenseMapper;
 import com.hrproject.hrwebsiteproject.model.dto.request.EmployeeExpenseRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
 import com.hrproject.hrwebsiteproject.model.dto.response.EmployeeExpenseResponseDto;
 import com.hrproject.hrwebsiteproject.model.entity.EmployeeExpense;
 import com.hrproject.hrwebsiteproject.service.EmployeeExpenseService;
+import com.hrproject.hrwebsiteproject.util.JwtManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +21,17 @@ import java.util.List;
 @CrossOrigin("*")
 public class EmployeeExpenseController {
     private final EmployeeExpenseService expenseService;
+    private final JwtManager jwtManager;
+    private final EmployeeExpenseMapper employeeExpenseMapper;
+
 
     @PostMapping(EndPoints.CREATE_EXPENSE)
     public ResponseEntity<BaseResponse<EmployeeExpenseResponseDto>> createExpense(
-            @RequestParam Long employeeId,
-            @RequestParam Long companyId,
+            @RequestHeader String token,
             @RequestBody @Valid EmployeeExpenseRequestDto dto) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        Long companyId = jwtManager.getCompanyIdFromToken(token);
 
         EmployeeExpenseResponseDto response = expenseService.createExpense(employeeId, companyId, dto);
 
@@ -37,7 +44,10 @@ public class EmployeeExpenseController {
     }
 
     @GetMapping(EndPoints.MY_EXPENSES)
-    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getMyExpenses(@RequestParam Long employeeId) {
+    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getMyExpenses(
+            @RequestHeader String token) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
         List<EmployeeExpenseResponseDto> expenses = expenseService.getMyExpenses(employeeId);
 
         return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
@@ -50,25 +60,30 @@ public class EmployeeExpenseController {
 
     @PutMapping(EndPoints.APPROVE_OR_REJECT_EXPENSE)
     public ResponseEntity<BaseResponse<EmployeeExpenseResponseDto>> approveOrReject(
+            @RequestHeader String token,
             @RequestParam Long expenseId,
             @RequestParam boolean approved,
             @RequestParam(required = false) String reason) {
+
+        Long adminId = jwtManager.getUserIdFromToken(token);
 
         EmployeeExpenseResponseDto response = expenseService.approveOrRejectExpense(expenseId, approved, reason);
 
         return ResponseEntity.ok(BaseResponse.<EmployeeExpenseResponseDto>builder()
                 .code(200)
                 .success(true)
-                .message(approved ? "Harcama onaylandı,maaşa eklendi" : "Harcama reddedildi.")
+                .message(approved ? "Harcama onaylandı, maaşa eklendi." : "Harcama reddedildi.")
                 .data(response)
                 .build());
     }
+
     @PutMapping(EndPoints.UPDATE_EXPENSE)
     public ResponseEntity<BaseResponse<EmployeeExpenseResponseDto>> updateExpense(
+            @RequestHeader String token,
             @RequestParam Long expenseId,
-            @RequestBody @Valid EmployeeExpenseRequestDto dto,
-            @RequestParam Long employeeId
-    ) {
+            @RequestBody @Valid EmployeeExpenseRequestDto dto) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
         EmployeeExpenseResponseDto updated = expenseService.updateExpense(expenseId, dto, employeeId);
 
         return ResponseEntity.ok(BaseResponse.<EmployeeExpenseResponseDto>builder()
@@ -78,11 +93,13 @@ public class EmployeeExpenseController {
                 .data(updated)
                 .build());
     }
+
     @DeleteMapping(EndPoints.DELETE_EXPENSE)
     public ResponseEntity<BaseResponse<Boolean>> deleteExpense(
-            @RequestParam Long expenseId,
-            @RequestParam Long employeeId
-    ) {
+            @RequestHeader String token,
+            @RequestParam Long expenseId) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
         expenseService.deleteExpense(expenseId, employeeId);
 
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
@@ -94,9 +111,15 @@ public class EmployeeExpenseController {
     }
 
     @GetMapping(EndPoints.APPROVED_EXPENSES)
-    public ResponseEntity<BaseResponse<List<EmployeeExpense>>> getApproved(@RequestParam Long employeeId) {
-        List<EmployeeExpense> approvedExpenses = expenseService.getApprovedExpenses(employeeId);
-        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpense>>builder()
+    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getApproved(
+            @RequestHeader String token) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        List<EmployeeExpenseResponseDto> approvedExpenses = expenseService.getApprovedExpenses(employeeId).stream()
+                .map(employeeExpenseMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
                 .code(200)
                 .success(true)
                 .message("Onaylanan harcamalar listelendi.")
@@ -105,9 +128,16 @@ public class EmployeeExpenseController {
     }
 
     @GetMapping(EndPoints.REJECTED_EXPENSES)
-    public ResponseEntity<BaseResponse<List<EmployeeExpense>>> getRejected(@RequestParam Long employeeId) {
-        List<EmployeeExpense> rejectedExpenses = expenseService.getRejectedExpenses(employeeId);
-        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpense>>builder()
+    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getRejected(
+            @RequestHeader String token) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        List<EmployeeExpenseResponseDto> rejectedExpenses = expenseService.getRejectedExpenses(employeeId)
+                .stream()
+                .map(employeeExpenseMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
                 .code(200)
                 .success(true)
                 .message("Reddedilen harcamalar listelendi.")
@@ -116,9 +146,16 @@ public class EmployeeExpenseController {
     }
 
     @GetMapping(EndPoints.PENDING_EXPENSES)
-    public ResponseEntity<BaseResponse<List<EmployeeExpense>>> getPending(@RequestParam Long employeeId) {
-        List<EmployeeExpense> pendingExpenses = expenseService.getPendingExpenses(employeeId);
-        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpense>>builder()
+    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getPending(
+            @RequestHeader String token) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        List<EmployeeExpenseResponseDto> pendingExpenses = expenseService.getPendingExpenses(employeeId)
+                .stream()
+                .map(employeeExpenseMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
                 .code(200)
                 .success(true)
                 .message("Beklemede olan harcamalar listelendi.")
@@ -126,67 +163,21 @@ public class EmployeeExpenseController {
                 .build());
     }
 
-@GetMapping(EndPoints.LIST_ALL_EXPENSES)
-public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getAllExpensesByCompany(@RequestParam Long companyId) {
-    List<EmployeeExpenseResponseDto> allExpenses = expenseService.getAllExpenseDtosByCompanyId(companyId);
-    return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
-            .code(200)
-            .success(true)
-            .message("Şirkete ait tüm harcamalar başarıyla listelendi.")
-            .data(allExpenses)
-            .build());
-}
-
-    /*
-    token
-    @PostMapping("/create")
-    public ResponseEntity<BaseResponse<EmployeeExpenseResponseDto>> createExpense(
+    @GetMapping(EndPoints.LIST_ALL_EXPENSES)
+    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getAllExpensesByCompany(
             @RequestHeader String token,
-            @RequestBody @Valid EmployeeExpenseRequestDto dto) {
+            @RequestParam Long companyId) {
 
-        Long userId = jwtManager.getUserIdFromToken(token);
-        Long employeeId = employeeService.getEmployeeIdByUserId(userId);
-        Long companyId = companyService.getCompanyIdByUserId(userId);
-
-        EmployeeExpenseResponseDto response = expenseService.createExpense(employeeId, companyId, dto);
-
-        return ResponseEntity.ok(BaseResponse.<EmployeeExpenseResponseDto>builder()
-                .code(200)
-                .success(true)
-                .message("Harcama talebi oluşturuldu.")
-                .data(response)
-                .build());
-    }
-
-    @GetMapping("/my-expenses")
-    public ResponseEntity<BaseResponse<List<EmployeeExpenseResponseDto>>> getMyExpenses(@RequestHeader String token) {
-        Long userId = jwtManager.getUserIdFromToken(token);
-        Long employeeId = employeeService.getEmployeeIdByUserId(userId);
-
-        List<EmployeeExpenseResponseDto> expenses = expenseService.getMyExpenses(employeeId);
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        List<EmployeeExpenseResponseDto> allExpenses = expenseService.getAllExpenseDtosByCompanyId(companyId);
 
         return ResponseEntity.ok(BaseResponse.<List<EmployeeExpenseResponseDto>>builder()
                 .code(200)
                 .success(true)
-                .message("Harcamalarınız listelendi.")
-                .data(expenses)
+                .message("Şirkete ait tüm harcamalar başarıyla listelendi.")
+                .data(allExpenses)
                 .build());
     }
 
-    @PutMapping("/approve-reject")
-    public ResponseEntity<BaseResponse<EmployeeExpenseResponseDto>> approveOrReject(
-            @RequestParam Long expenseId,
-            @RequestParam boolean approved,
-            @RequestParam(required = false) String reason) {
 
-        EmployeeExpenseResponseDto response = expenseService.approveOrRejectExpense(expenseId, approved, reason);
-
-        return ResponseEntity.ok(BaseResponse.<EmployeeExpenseResponseDto>builder()
-                .code(200)
-                .success(true)
-                .message(approved ? "Harcama onaylandı." : "Harcama reddedildi.")
-                .data(response)
-                .build());
-    }
-     */
 }
