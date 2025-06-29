@@ -25,7 +25,13 @@ public class LeaveTypeController {
     private final JwtManager jwtManager;
 
     @PostMapping(EndPoints.CREATE_LEAVE_TYPE)
-    public ResponseEntity<BaseResponse<LeaveTypeResponseDto>> create(@RequestBody @Valid LeaveTypeCreateRequestDto dto) {
+    public ResponseEntity<BaseResponse<LeaveTypeResponseDto>> create(
+            @RequestHeader String token,
+            @RequestBody @Valid LeaveTypeCreateRequestDto dto) {
+
+        Long userId = jwtManager.getUserIdFromToken(token);
+
+
         LeaveTypeResponseDto created = leaveTypeService.create(dto);
         return ResponseEntity.ok(BaseResponse.<LeaveTypeResponseDto>builder()
                 .code(200)
@@ -34,9 +40,16 @@ public class LeaveTypeController {
                 .data(created)
                 .build());
     }
+
     @PutMapping(EndPoints.UPDATE_LEAVE_TYPE)
-    public ResponseEntity<BaseResponse<LeaveTypeResponseDto>> update( Long id,
-                                                                     @RequestBody @Valid LeaveTypeUpdateRequestDto dto) {
+    public ResponseEntity<BaseResponse<LeaveTypeResponseDto>> update(
+            @RequestHeader String token,
+            @RequestParam Long id,
+            @RequestBody @Valid LeaveTypeUpdateRequestDto dto) {
+
+        Long userId = jwtManager.getUserIdFromToken(token);
+
+
         LeaveTypeResponseDto updated = leaveTypeService.update(id, dto);
         return ResponseEntity.ok(BaseResponse.<LeaveTypeResponseDto>builder()
                 .code(200)
@@ -45,8 +58,15 @@ public class LeaveTypeController {
                 .data(updated)
                 .build());
     }
+
     @DeleteMapping(EndPoints.DELETE_LEAVE_TYPE)
-    public ResponseEntity<BaseResponse<Boolean>> delete(Long id) {
+    public ResponseEntity<BaseResponse<Boolean>> delete(
+            @RequestHeader String token,
+            @RequestParam Long id) {
+
+        Long userId = jwtManager.getUserIdFromToken(token);
+
+
         leaveTypeService.delete(id);
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
                 .code(200)
@@ -55,8 +75,10 @@ public class LeaveTypeController {
                 .data(true)
                 .build());
     }
+
     @GetMapping(EndPoints.LIST_LEAVE_TYPE)
-    public ResponseEntity<BaseResponse<List<LeaveTypeResponseDto>>> list() {
+    public ResponseEntity<BaseResponse<List<LeaveTypeResponseDto>>> list(@RequestHeader String token) {
+        Long userId = jwtManager.getUserIdFromToken(token);
         List<LeaveTypeResponseDto> list = leaveTypeService.findAll();
         return ResponseEntity.ok(BaseResponse.<List<LeaveTypeResponseDto>>builder()
                 .code(200)

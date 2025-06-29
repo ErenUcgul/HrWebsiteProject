@@ -26,21 +26,7 @@ public class EmployeeLeaveController {
     private final EmployeeLeaveService employeeLeaveService;
     private final EmployeeService employeeService;
 
-    @PostMapping(EndPoints.EMPLOYEE_LEAVE_REQUEST)
-    public ResponseEntity<BaseResponse<EmployeeLeaveResponseDto>> requestLeave(
-            @RequestParam Long employeeId,
-            @RequestParam Long companyId,
-            @RequestBody @Valid EmployeeLeaveRequestDto dto
-    ) {
-        EmployeeLeaveResponseDto response = employeeLeaveService.requestLeave(dto, employeeId, companyId);
 
-        return ResponseEntity.ok(BaseResponse.<EmployeeLeaveResponseDto>builder()
-                .code(200)
-                .success(true)
-                .message("İzin talebi başarıyla oluşturuldu.")
-                .data(response)
-                .build());
-    }
 
     //TODO: Employee girişi sonrası token checkli metod kullanılacak
 //    @PostMapping(EndPoints.EMPLOYEE_LEAVE_REQUEST)
@@ -119,10 +105,29 @@ public class EmployeeLeaveController {
 //                .build());
 //    }
 
+    @PostMapping(EndPoints.EMPLOYEE_LEAVE_REQUEST)
+    public ResponseEntity<BaseResponse<EmployeeLeaveResponseDto>> requestLeave(
+            @RequestHeader String token,
+            @RequestBody @Valid EmployeeLeaveRequestDto dto
+    ) {
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        Long companyId = jwtManager.getCompanyIdFromToken(token);
+
+        EmployeeLeaveResponseDto response = employeeLeaveService.requestLeave(dto, employeeId, companyId);
+
+        return ResponseEntity.ok(BaseResponse.<EmployeeLeaveResponseDto>builder()
+                .code(200)
+                .success(true)
+                .message("İzin talebi başarıyla oluşturuldu.")
+                .data(response)
+                .build());
+    }
+
     @GetMapping(EndPoints.MY_LEAVES)
     public ResponseEntity<BaseResponse<List<EmployeeLeaveResponseDto>>> getMyLeaves(
-            @RequestParam Long employeeId) {
+            @RequestHeader String token) {
 
+        Long employeeId = jwtManager.getUserIdFromToken(token);
         List<EmployeeLeaveResponseDto> leaves = employeeLeaveService.getLeavesByEmployeeId(employeeId);
 
         return ResponseEntity.ok(BaseResponse.<List<EmployeeLeaveResponseDto>>builder()
@@ -135,10 +140,11 @@ public class EmployeeLeaveController {
 
     @PutMapping(EndPoints.UPDATE_LEAVE_REQUEST)
     public ResponseEntity<BaseResponse<EmployeeLeaveResponseDto>> updateLeaveRequest(
-            @RequestParam Long employeeId,
+            @RequestHeader String token,
             @RequestParam Long leaveRequestId,
             @RequestBody @Valid EmployeeLeaveRequestDto dto) {
 
+        Long employeeId = jwtManager.getUserIdFromToken(token);
         EmployeeLeaveResponseDto updated = employeeLeaveService.updateLeaveRequest(leaveRequestId, dto, employeeId);
 
         return ResponseEntity.ok(BaseResponse.<EmployeeLeaveResponseDto>builder()
@@ -151,9 +157,10 @@ public class EmployeeLeaveController {
 
     @DeleteMapping(EndPoints.CANCEL_LEAVE_REQUEST)
     public ResponseEntity<BaseResponse<Boolean>> cancelLeaveRequest(
-            @RequestParam Long employeeId,
+            @RequestHeader String token,
             @RequestParam Long leaveRequestId) {
 
+        Long employeeId = jwtManager.getUserIdFromToken(token);
         employeeLeaveService.cancelLeaveRequest(leaveRequestId, employeeId);
 
         return ResponseEntity.ok(BaseResponse.<Boolean>builder()
@@ -163,6 +170,5 @@ public class EmployeeLeaveController {
                 .data(true)
                 .build());
     }
-
 
 }

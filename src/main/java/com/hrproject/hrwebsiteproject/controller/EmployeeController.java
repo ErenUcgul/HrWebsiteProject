@@ -3,11 +3,9 @@ package com.hrproject.hrwebsiteproject.controller;
 import com.hrproject.hrwebsiteproject.constant.EndPoints;
 import com.hrproject.hrwebsiteproject.model.dto.request.EmployeeCreateRequestDto;
 import com.hrproject.hrwebsiteproject.model.dto.request.EmployeeUpdateRequestDto;
-import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
-import com.hrproject.hrwebsiteproject.model.dto.response.EmployeeDetailDto;
-import com.hrproject.hrwebsiteproject.model.dto.response.EmployeeListDto;
-import com.hrproject.hrwebsiteproject.model.dto.response.EmployeeResponseDto;
+import com.hrproject.hrwebsiteproject.model.dto.response.*;
 import com.hrproject.hrwebsiteproject.service.CompanyService;
+import com.hrproject.hrwebsiteproject.service.DashboardService;
 import com.hrproject.hrwebsiteproject.service.EmployeeService;
 import com.hrproject.hrwebsiteproject.util.JwtManager;
 import jakarta.validation.Valid;
@@ -25,14 +23,20 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final JwtManager jwtManager;
     private final CompanyService companyService;
+    private final DashboardService dashboardService;
 
     @GetMapping(EndPoints.EMPLOYEE_DASHBOARD)
-    public ResponseEntity<BaseResponse<String>> getEmployeeDashboard() {
-        return ResponseEntity.ok(BaseResponse.<String>builder()
+    public ResponseEntity<BaseResponse<EmployeeDashboardDTO>> getDashboard(
+            @RequestHeader String token) {
+
+        Long employeeId = jwtManager.getUserIdFromToken(token);
+        EmployeeDashboardDTO dashboard = dashboardService.getEmployeeDashboard(employeeId);
+
+        return ResponseEntity.ok(BaseResponse.<EmployeeDashboardDTO>builder()
                 .code(200)
                 .success(true)
-                .data("Employee dashboard verisi şu anda boş.")
-                .message("Personel dashboard verisi başarıyla getirildi.")
+                .message("Employee dashboard verileri getirildi.")
+                .data(dashboard)
                 .build());
     }
 
@@ -72,6 +76,7 @@ public class EmployeeController {
                 .data(true)
                 .build());
     }
+
     @PutMapping(EndPoints.DELETE_EMPLOYEE)
     public ResponseEntity<BaseResponse<Boolean>> softDeleteEmployee(
             @RequestParam Long employeeId,
@@ -89,6 +94,7 @@ public class EmployeeController {
                 .data(true)
                 .build());
     }
+
     @PutMapping(EndPoints.ACTIVATE_EMPLOYEE)
     public ResponseEntity<BaseResponse<Boolean>> activateEmployee(
             @RequestParam Long employeeId,
@@ -106,6 +112,7 @@ public class EmployeeController {
                 .data(true)
                 .build());
     }
+
     @PutMapping(EndPoints.DEACTIVATE_EMPLOYEE)
     public ResponseEntity<BaseResponse<Boolean>> deactivateEmployee(
             @RequestParam Long employeeId,
@@ -123,7 +130,8 @@ public class EmployeeController {
                 .data(true)
                 .build());
     }
-    //17.06
+
+
     @GetMapping(EndPoints.LIST_ALL_EMPLOYEES)
     public ResponseEntity<BaseResponse<List<EmployeeListDto>>> getAllEmployees(
             @RequestHeader String token) {
@@ -140,7 +148,8 @@ public class EmployeeController {
                 .data(employees)
                 .build());
     }
-    @GetMapping(EndPoints.GET_EMPLOYEE_DETAILS )
+
+    @GetMapping(EndPoints.GET_EMPLOYEE_DETAILS)
     public ResponseEntity<BaseResponse<EmployeeDetailDto>> getEmployeeDetails(
             @RequestHeader String token,
             Long employeeId) {

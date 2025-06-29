@@ -4,12 +4,10 @@ import com.hrproject.hrwebsiteproject.constant.EndPoints;
 import com.hrproject.hrwebsiteproject.model.dto.response.BaseResponse;
 import com.hrproject.hrwebsiteproject.model.entity.StaticContent;
 import com.hrproject.hrwebsiteproject.service.StaticContentService;
+import com.hrproject.hrwebsiteproject.util.JwtManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(EndPoints.PUBLIC_API)
@@ -18,8 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class StaticContentController {
     private final StaticContentService staticContentService;
 
+    private final JwtManager jwtManager;  // token manager eklenmeli
+
     @GetMapping(EndPoints.HOMEPAGE_CONTENT)
-    public ResponseEntity<BaseResponse<String>> getHomepageContent() {
+    public ResponseEntity<BaseResponse<String>> getHomepageContent(@RequestHeader String token) {
+        Long userId = jwtManager.getUserIdFromToken(token);
+        // opsiyonel: userId ile yetki kontrolü eklenebilir
+
         StaticContent content = staticContentService.getContentByKey("homepage");
         return ResponseEntity.ok(BaseResponse.<String>builder()
                 .success(true)
@@ -30,7 +33,9 @@ public class StaticContentController {
     }
 
     @GetMapping(EndPoints.HOW_IT_WORKS)
-    public ResponseEntity<BaseResponse<String>> getHowItWorks() {
+    public ResponseEntity<BaseResponse<String>> getHowItWorks(@RequestHeader String token) {
+        Long userId = jwtManager.getUserIdFromToken(token);
+
         StaticContent content = staticContentService.getContentByKey("how-it-works");
         return ResponseEntity.ok(BaseResponse.<String>builder()
                 .success(true)
@@ -41,7 +46,9 @@ public class StaticContentController {
     }
 
     @GetMapping(EndPoints.PLATFORM_FEATURES)
-    public ResponseEntity<BaseResponse<String>> getPlatformFeatures() {
+    public ResponseEntity<BaseResponse<String>> getPlatformFeatures(@RequestHeader String token) {
+        Long userId = jwtManager.getUserIdFromToken(token);
+
         StaticContent content = staticContentService.getContentByKey("platform-features");
         return ResponseEntity.ok(BaseResponse.<String>builder()
                 .success(true)
@@ -52,7 +59,9 @@ public class StaticContentController {
     }
 
     @GetMapping(EndPoints.HOLIDAYS)
-    public ResponseEntity<BaseResponse<String>> getHolidays() {
+    public ResponseEntity<BaseResponse<String>> getHolidays(@RequestHeader String token) {
+        Long userId = jwtManager.getUserIdFromToken(token);
+
         StaticContent content = staticContentService.getContentByKey("holidays");
         return ResponseEntity.ok(BaseResponse.<String>builder()
                 .success(true)
